@@ -1,0 +1,12 @@
+.vscode/
+build/
+modules/
+baserom/
+tools/*
+romfs/
+riivo/spnet/
+distro/
+
+*.dol
+*.bin
+*.o
