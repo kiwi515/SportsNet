@@ -127,13 +127,13 @@ IPCResult IOS_WriteAsync(s32, const void*, s32, IPCAsyncCallback, void*);
 IPCResult IOS_Write(s32, const void*, s32);
 IPCResult IOS_SeekAsync(s32, s32, IPCSeekMode, IPCAsyncCallback, void*);
 IPCResult IOS_Seek(s32, s32, IPCSeekMode);
-IPCResult IOS_IoctlAsync(s32, IPCIoctlType, void*, s32, void*, s32,
-                         IPCAsyncCallback, void*);
-IPCResult IOS_Ioctl(s32, IPCIoctlType, void*, s32, void*, s32);
-IPCResult IOS_IoctlvAsync(s32, IPCIoctlType, s32, s32, IPCIOVector*,
-                          IPCAsyncCallback, void*);
-IPCResult IOS_Ioctlv(s32, IPCIoctlType, s32, s32, IPCIOVector*);
-IPCResult IOS_IoctlvReboot(s32, IPCIoctlType, s32, s32, IPCIOVector*);
+IPCResult IOS_IoctlAsync(s32, s32, void*, s32, void*, s32, IPCAsyncCallback,
+                         void*);
+IPCResult IOS_Ioctl(s32, s32, void*, s32, void*, s32);
+IPCResult IOS_IoctlvAsync(s32, s32, s32, s32, IPCIOVector*, IPCAsyncCallback,
+                          void*);
+IPCResult IOS_Ioctlv(s32, s32, s32, s32, IPCIOVector*);
+IPCResult IOS_IoctlvReboot(s32, s32, s32, s32, IPCIOVector*);
 
 #ifdef __cplusplus
 }

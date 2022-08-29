@@ -1,5 +1,8 @@
 #ifndef __TYPES_H__
 #define __TYPES_H__
+#include "matoAssert.h"
+#include "matoMemMgr.hpp"
+
 #include <kamek.h>
 #include <stdarg.h>
 #include <stddef.h>

@@ -50,6 +50,14 @@ inline void* operator new[](size_t size) {
     return mato::MemManager::Alloc(size, 4);
 }
 
+inline void* operator new(size_t size, s32 align) {
+    return mato::MemManager::Alloc(size, align);
+}
+
+inline void* operator new[](size_t size, s32 align) {
+    return mato::MemManager::Alloc(size, align);
+}
+
 inline void operator delete(void* block) { mato::MemManager::Free(block); }
 
 inline void operator delete[](void* block) { mato::MemManager::Free(block); }
