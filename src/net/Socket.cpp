@@ -41,8 +41,53 @@ void Socket::Initialize() {
  */
 bool Socket::GetAddrInfo(const char* node, const char* service,
                          const AddrInfo* hints, AddrInfo** res) {
-    ;
-    MATO_ASSERT_EX(false, "Not yet implemented.");
+    MATO_ASSERT_EX(sInitialized, "Please call Socket::initialize");
+
+    if (res == NULL) {
+        return false;
+    }
+
+    // Only IPv4 is supported
+    if (hints != NULL && hints->family != PF_INET) {
+        *res = NULL;
+        return false;
+    }
+
+    // Setup data for ioctl
+    enum GetAddrVectors { V_NODE, V_SERVICE, V_HINTS, V_RES, V_MAX };
+    IPCIOVector* vectors = new (32) IPCIOVector[V_MAX];
+    // Node
+    if (node != NULL) {
+        const size_t nodeLength = strlen(node);
+        vectors[V_NODE].base = new char[nodeLength];
+        strncpy(static_cast<char*>(vectors[V_NODE].base), node, nodeLength);
+        vectors[V_NODE].length = nodeLength;
+    }
+    // Service
+    if (service != NULL) {
+        const size_t serviceLength = strlen(service);
+        vectors[V_SERVICE].base = new char[serviceLength];
+        strncpy(static_cast<char*>(vectors[V_SERVICE].base), service,
+                serviceLength);
+        vectors[V_SERVICE].length = serviceLength;
+    }
+    // Hints
+    AddrInfo* addr = new (32) AddrInfo();
+    if (hints != NULL) {
+        memcpy(addr, hints, sizeof(AddrInfo));
+        vectors[V_HINTS].base = addr;
+        vectors[V_HINTS].length = sizeof(AddrInfo);
+    }
+
+    s32 result = IOS_Ioctl();
+
+    // Cleanup memory
+    for (int i = 0; i < V_MAX; i++) {
+        delete vectors[i].base;
+    }
+    delete[] vectors;
+
+    // return result >= 0;
 }
 
 /**
