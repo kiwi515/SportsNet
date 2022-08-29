@@ -93,8 +93,8 @@ public:
     static void Initialize();
     static bool GetAddrInfo(const char* node, const char* service,
                             const AddrInfo* hints, AddrInfo** res);
-    static bool INetNtoP(const InAddr* addr, char* dst);
-    static bool INetPtoN(const char* addr, InAddr* dst);
+    static bool INetNtoA(const InAddr* addr, char* dst);
+    static bool INetAtoN(const char* addr, InAddr* dst);
 
     Socket(Family domain, SocketType type, Protocol protocol);
     virtual ~Socket();

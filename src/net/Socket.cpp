@@ -50,7 +50,7 @@ bool Socket::GetAddrInfo(const char* node, const char* service,
  * @return true
  * @return false
  */
-bool Socket::INetNtoP(const InAddr* addr, char* dst) {
+bool Socket::INetNtoA(const InAddr* addr, char* dst) {
     ;
     MATO_ASSERT_EX(false, "Not yet implemented.");
 }
@@ -63,7 +63,7 @@ bool Socket::INetNtoP(const InAddr* addr, char* dst) {
  * @return true
  * @return false
  */
-bool Socket::INetPtoN(const char* addr, InAddr* dst) {
+bool Socket::INetAtoN(const char* addr, InAddr* dst) {
     ;
     MATO_ASSERT_EX(false, "Not yet implemented.");
 }
