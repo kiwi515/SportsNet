@@ -582,8 +582,8 @@
 ###########
 # Runtime #
 ###########
-    __nw__FUl=0x800a3244
-    __dl__FPv=0x800a3284
+    memcpy=0x80004000
+    memset=0x80004104
     strlen=0x800b1750
     __va_arg=0x800b176c
     __register_global_object=0x800b1834

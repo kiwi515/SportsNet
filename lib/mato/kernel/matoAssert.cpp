@@ -1,5 +1,7 @@
 #include "matoAssert.h"
 
+#include "types.h"
+
 #include <GX/GX.h>
 #include <OS/OSError.h>
 #include <OS/OSFatal.h>

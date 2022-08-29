@@ -1,7 +1,6 @@
 #ifndef __TYPES_H__
 #define __TYPES_H__
 #include "matoAssert.h"
-#include "matoMemMgr.hpp"
 
 #include <kamek.h>
 #include <stdarg.h>
@@ -35,5 +34,14 @@ typedef int UNKWORD;
 typedef void UNKTYPE;
 
 typedef enum { FALSE, TRUE } BOOL;
+
+void* operator new(size_t size);
+void* operator new[](size_t size);
+
+void* operator new(size_t size, s32 align);
+void* operator new[](size_t size, s32 align);
+
+void operator delete(void* block);
+void operator delete[](void* block);
 
 #endif

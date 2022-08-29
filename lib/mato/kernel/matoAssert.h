@@ -1,6 +1,5 @@
 #ifndef MATO_KERNEL_ASSERT_H
 #define MATO_KERNEL_ASSERT_H
-#include "types.h"
 
 #ifndef NDEBUG
 //! @brief Log a message to the console
