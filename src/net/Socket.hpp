@@ -93,7 +93,7 @@ public:
     static void Initialize();
     static bool GetAddrInfo(const char* node, const char* service,
                             const AddrInfo* hints, AddrInfo** res);
-    static bool INetNtoA(const InAddr* addr, char* dst);
+    static const char* INetNtoA(const InAddr* addr);
     static bool INetAtoN(const char* addr, InAddr* dst);
 
     Socket(Family domain, SocketType type, Protocol protocol);
@@ -111,10 +111,10 @@ public:
     // bool SetAsync(bool);
     bool GetPeerName(SockAddrIn* peer);
     bool GetSocketName(SockAddrIn* peer);
-    size_t Recieve(void* buf, size_t len, u32 flags);
-    size_t RecieveFrom(void* buf, size_t len, u32 flags, SockAddrIn* from);
-    size_t Send(const void* buf, size_t len, u32 flags);
-    size_t SendTo(const void* buf, size_t len, u32 flags, const SockAddrIn* to);
+    s32 Recieve(void* buf, size_t len, u32 flags);
+    s32 RecieveFrom(void* buf, size_t len, u32 flags, SockAddrIn* from);
+    s32 Send(const void* buf, size_t len, u32 flags);
+    s32 SendTo(const void* buf, size_t len, u32 flags, const SockAddrIn* to);
     bool Shutdown(ShutdownType type);
 
 private:

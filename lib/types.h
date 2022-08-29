@@ -7,6 +7,15 @@
 #include <stdarg.h>
 #include <stddef.h>
 
+#define ROUND_UP(x, align) (((x) + (align)-1) & (-(align)))
+#define ROUND_UP_PTR(x, align)                                                 \
+    ((void*)((((u32)(x)) + (align)-1) & (~((align)-1))))
+
+#define ROUND_DOWN(x, align) ((x) & (-(align)))
+#define ROUND_DOWN_PTR(x, align) ((void*)(((u32)(x)) & (~((align)-1))))
+
+#define ARRAY_LENGTH(x) (sizeof((x)) / sizeof((x)[0]))
+
 typedef unsigned long long u64;
 typedef signed long long s64;
 

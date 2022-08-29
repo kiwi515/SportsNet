@@ -2,6 +2,9 @@
 
 #include <IPC/ipcclt.h>
 #include <TRK/__mem.h>
+#include <mato/math/matoAlgorithm.hpp>
+#include <stdio.h>
+#include <string.h>
 
 namespace spnet {
 
@@ -43,27 +46,58 @@ bool Socket::GetAddrInfo(const char* node, const char* service,
 }
 
 /**
- * @brief
+ * @brief Convert network address to ASCII string
  *
- * @param addr
- * @param dst
- * @returns Success
+ * @param addr Network address
+ * @returns ASCII string
  */
-bool Socket::INetNtoA(const InAddr* addr, char* dst) {
-    ;
-    MATO_ASSERT_EX(false, "Not yet implemented.");
+const char* Socket::INetNtoA(const InAddr* addr) {
+    static char sAddressBuf[32];
+
+    if (addr != NULL) {
+        snprintf(sAddressBuf, sizeof(sAddressBuf), "%d.%d.%d.%d",
+                 addr->octets[0], addr->octets[1], addr->octets[2],
+                 addr->octets[3]);
+    }
 }
 
 /**
- * @brief
+ * @brief Convert ASCII string to network address
  *
- * @param addr
- * @param dst
+ * @param addr ASCII string
+ * @param[out] dst Network address
  * @returns Success
  */
 bool Socket::INetAtoN(const char* addr, InAddr* dst) {
-    ;
-    MATO_ASSERT_EX(false, "Not yet implemented.");
+    MATO_ASSERT_EX(sInitialized, "Please call Socket::initialize");
+
+    if (addr == NULL) {
+        return false;
+    }
+
+    // Setup data for ioctl
+    struct AtoNData {
+        union {
+            InAddr addr;
+            u8 data[32];
+        };              // at 0x0
+        char ascii[32]; // at 0x20
+    };
+    AtoNData* data = new (32) AtoNData();
+
+    const size_t len = mato::Min<size_t>(strlen(addr), sizeof(data->ascii) - 1);
+    strncpy(data->ascii, addr, sizeof(data->ascii));
+    data->ascii[len] = '\0';
+
+    s32 result = IOS_Ioctl(sTcpStackHandle, IOCTL_INET_ATON, data->ascii, len,
+                           &data->addr, sizeof(InAddr));
+
+    if (result >= 0 && dst != NULL) {
+        memcpy(dst, &data->addr, sizeof(InAddr));
+    }
+
+    delete data;
+    return result >= 0;
 }
 
 /**
@@ -124,6 +158,7 @@ Socket::~Socket() {
 bool Socket::Close() {
     MATO_ASSERT_EX(sInitialized, "Please call Socket::initialize");
 
+    // Setup data for ioctl
     struct CloseData {
         s32 handle; // at 0x0
     };
@@ -144,8 +179,21 @@ bool Socket::Close() {
  * @returns Success
  */
 bool Socket::Listen(s32 backlog) {
-    ;
-    MATO_ASSERT_EX(false, "Not yet implemented.");
+    MATO_ASSERT_EX(sInitialized, "Please call Socket::initialize");
+
+    // Setup data for ioctl
+    struct ListenData {
+        s32 handle;  // at 0x0
+        s32 backlog; // at 0x4
+    };
+    ListenData* data = new (32) ListenData();
+    data->handle = mHandle;
+    data->backlog = backlog;
+
+    s32 result = IOS_Ioctl(sTcpStackHandle, IOCTL_LISTEN, data,
+                           sizeof(ListenData), NULL, 0);
+    delete data;
+    return result >= 0;
 }
 
 /**
@@ -362,29 +410,39 @@ bool Socket::GetSocketName(SockAddrIn* socket) {
 }
 
 /**
- * @brief
+ * @brief Receive data from bound connection
  *
- * @param buf
- * @param len
- * @param flags
- * @return size_t
+ * @param buf Destination buffer
+ * @param len Buffer size
+ * @param flags Flags
+ * @returns Total data received
  */
-size_t Socket::Recieve(void* buf, size_t len, u32 flags) {
+s32 Socket::Recieve(void* buf, size_t len, u32 flags) {
     return RecieveFrom(buf, len, flags, NULL);
 }
 
 /**
- * @brief
+ * @brief Receive data from specified source
  *
- * @param buf
- * @param len
- * @param flags
- * @param from
- * @return size_t
+ * @param buf Destination buffer
+ * @param len Buffer size
+ * @param flags Flags
+ * @param from Data source
+ * @returns Total data received
  */
-size_t Socket::RecieveFrom(void* buf, size_t len, u32 flags, SockAddrIn* from) {
-    ;
-    MATO_ASSERT_EX(false, "Not yet implemented.");
+s32 Socket::RecieveFrom(void* buf, size_t len, u32 flags, SockAddrIn* from) {
+    // Only IPv4 is supported
+    if (from != NULL && from->len != 8) {
+        return -1;
+    }
+
+    if (len == 0) {
+        return 0;
+    }
+
+    if (buf == NULL) {
+        return -1;
+    }
 }
 
 /**
@@ -395,7 +453,7 @@ size_t Socket::RecieveFrom(void* buf, size_t len, u32 flags, SockAddrIn* from) {
  * @param flags
  * @return size_t
  */
-size_t Socket::Send(const void* buf, size_t len, u32 flags) {
+s32 Socket::Send(const void* buf, size_t len, u32 flags) {
     return SendTo(buf, len, flags, NULL);
 }
 
@@ -408,8 +466,8 @@ size_t Socket::Send(const void* buf, size_t len, u32 flags) {
  * @param to
  * @return size_t
  */
-size_t Socket::SendTo(const void* buf, size_t len, u32 flags,
-                      const SockAddrIn* to) {
+s32 Socket::SendTo(const void* buf, size_t len, u32 flags,
+                   const SockAddrIn* to) {
     ;
     MATO_ASSERT_EX(false, "Not yet implemented.");
 }
