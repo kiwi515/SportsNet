@@ -34,7 +34,7 @@ void Socket::Initialize() {
  * @param service
  * @param hints
  * @param res
- * @return Success
+ * @returns Success
  */
 bool Socket::GetAddrInfo(const char* node, const char* service,
                          const AddrInfo* hints, AddrInfo** res) {
@@ -47,8 +47,7 @@ bool Socket::GetAddrInfo(const char* node, const char* service,
  *
  * @param addr
  * @param dst
- * @return true
- * @return false
+ * @returns Success
  */
 bool Socket::INetNtoA(const InAddr* addr, char* dst) {
     ;
@@ -60,8 +59,7 @@ bool Socket::INetNtoA(const InAddr* addr, char* dst) {
  *
  * @param addr
  * @param dst
- * @return true
- * @return false
+ * @returns Success
  */
 bool Socket::INetAtoN(const char* addr, InAddr* dst) {
     ;
