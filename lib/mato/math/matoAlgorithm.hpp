@@ -32,6 +32,11 @@ static inline const void* AddToPtr(const void* ptr, s32 ofs) {
     return (char*)ptr + ofs;
 }
 
+/**
+ * @brief Add offset to pointer
+ */
+static inline void* AddToPtr(void* ptr, s32 ofs) { return (char*)ptr + ofs; }
+
 } // namespace mato
 
 #endif

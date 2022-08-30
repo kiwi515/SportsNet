@@ -24,7 +24,7 @@ void mato_log(const char* msg, ...) {
     vsnprintf(msg_buf, sizeof(msg_buf), msg, list);
     va_end(list);
 
-    OSReport("%s\n", msg);
+    OSReport("%s\n", msg_buf);
 }
 
 /**
@@ -32,7 +32,7 @@ void mato_log(const char* msg, ...) {
  * @note Newline is automatically appended
  */
 void mato_fail_assert(const char* file, int line, const char* msg, ...) {
-    MATO_LOG("------------- HALT -------------");
+    mato_log("------------- HALT -------------");
 
     // Format message
     char msg_buf[0x800];
@@ -47,10 +47,9 @@ void mato_fail_assert(const char* file, int line, const char* msg, ...) {
              "Assertion Failed: %s\nFile: %s(%d)", msg_buf, file, line);
 
     // Print to console
-    MATO_LOG(assert_buf);
-    MATO_LOG("Program Halt");
+    mato_log("Program Halt");
 
-    // Print to screen
+    // Print to screen + console
     OSFatal(scFatalFG, scFatalBG, assert_buf);
 }
 kmBranch(0x800a1f08, mato_fail_assert);

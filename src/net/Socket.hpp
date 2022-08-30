@@ -23,6 +23,8 @@ public:
 
     //! Socket transfer protocol
     enum Protocol {
+        IPPROTO_AUTO,
+
         IPPROTO_TCP = 6,
         IPPROTO_UDP = 21,
     };
@@ -56,6 +58,9 @@ public:
     };
 
 private:
+    static const u32 scAddrInfoMaxResults = 35;
+    static const u32 scAddrInfoNameSize = 28;
+
     //! I/O control commands for internal socket operation
     enum Ioctl {
         NONE,
@@ -78,6 +83,7 @@ private:
         IOCTL_GET_HOST_BY_NAME,
         IOCTL_GET_HOST_BY_ADDR,
         IOCTL_GET_NAME_INFO,
+        IOCTL_14H,
         IOCTL_INET_ATON,
         IOCTL_INET_PTON,
         IOCTL_INET_NTOP,
@@ -89,12 +95,107 @@ private:
         IOCTL_SO_STARTUP
     };
 
+    // https://github.com/dolphin-emu/dolphin/blob/master/Source/Core/Core/IOS/Network/Socket.h
+    enum Error {
+        SUCCESS,
+        E2BIG,
+        EACCES,
+        EADDRINUSE,
+        EADDRNOTAVAIL,
+        EAFNOSUPPORT,
+        EAGAIN,
+        EALREADY,
+        EBADF,
+        EBADMSG,
+        EBUSY,
+        ECANCELED,
+        ECHILD,
+        ECONNABORTED,
+        ECONNREFUSED,
+        ECONNRESET,
+        EDEADLK,
+        EDESTADDRREQ,
+        EDOM,
+        EDQUOT,
+        EEXIST,
+        EFAULT,
+        EFBIG,
+        EHOSTUNREACH,
+        EIDRM,
+        EILSEQ,
+        EINPROGRESS,
+        EINTR,
+        EINVAL,
+        EIO,
+        EISCONN,
+        EISDIR,
+        ELOOP,
+        EMFILE,
+        EMLINK,
+        EMSGSIZE,
+        EMULTIHOP,
+        ENAMETOOLONG,
+        ENETDOWN,
+        ENETRESET,
+        ENETUNREACH,
+        ENFILE,
+        ENOBUFS,
+        ENODATA,
+        ENODEV,
+        ENOENT,
+        ENOEXEC,
+        ENOLCK,
+        ENOLINK,
+        ENOMEM,
+        ENOMSG,
+        ENOPROTOOPT,
+        ENOSPC,
+        ENOSR,
+        ENOSTR,
+        ENOSYS,
+        ENOTCONN,
+        ENOTDIR,
+        ENOTEMPTY,
+        ENOTSOCK,
+        ENOTSUP,
+        ENOTTY,
+        ENXIO,
+        EOPNOTSUPP,
+        EOVERFLOW,
+        EPERM,
+        EPIPE,
+        EPROTO,
+        EPROTONOSUPPORT,
+        EPROTOTYPE,
+        ERANGE,
+        EROFS,
+        ESPIPE,
+        ESRCH,
+        ESTALE,
+        ETIME,
+        ETIMEDOUT,
+        ETXTBSY,
+        EXDEV,
+
+        ERROR_MAX
+    };
+
+    //! Structure for get/free addr info
+    struct GetAddrInfoData {
+        AddrInfo results[scAddrInfoMaxResults];
+        char names[scAddrInfoMaxResults * scAddrInfoNameSize];
+    };
+
 public:
     static void Initialize();
+    static const char* GetErrorString(s32 error);
+    static void GetHostID(InAddr& addr);
     static bool GetAddrInfo(const char* node, const char* service,
                             const AddrInfo* hints, AddrInfo** res);
-    static const char* INetNtoA(const InAddr* addr);
-    static bool INetAtoN(const char* addr, InAddr* dst);
+    static void FreeAddrInfo(AddrInfo* addr);
+    static const char* INetNtoA(const InAddr& addr, char* dst = NULL,
+                                size_t len = 0);
+    static bool INetAtoN(const char* addr, InAddr& dst);
 
     Socket(Family domain, SocketType type, Protocol protocol);
     virtual ~Socket();
@@ -104,13 +205,13 @@ public:
     bool Close();
     bool Listen(s32 backlog);
     Socket* Accept(SockAddrIn* remote);
-    bool Bind(SockAddrIn* local);
-    bool Connect(SockAddrIn* remote);
+    bool Bind(SockAddrIn& local);
+    bool Connect(SockAddrIn& remote);
     bool Disconnect();
     // bool SetBlocking(bool);
     // bool SetAsync(bool);
-    bool GetPeerName(SockAddrIn* peer);
-    bool GetSocketName(SockAddrIn* peer);
+    bool GetPeerName(SockAddrIn& peer);
+    bool GetSocketName(SockAddrIn& peer);
     s32 Recieve(void* buf, size_t len, u32 flags);
     s32 RecieveFrom(void* buf, size_t len, u32 flags, SockAddrIn* from);
     s32 Send(const void* buf, size_t len, u32 flags);
@@ -120,6 +221,7 @@ public:
 private:
     Socket(s32 handle);
 
+private:
     s32 mHandle;
 
     static bool sInitialized;
