@@ -161,6 +161,12 @@ private:
         AddrInfo* next;
     };
 
+    struct PollFD {
+        s32 fd;
+        s32 events;
+        s32 revents;
+    };
+
 public:
     static void Initialize();
     static const char* GetErrorString(s32 error);
@@ -179,12 +185,16 @@ public:
     bool Listen(s32 backlog = 5);
     bool GetSocketIP(u32& ip, u16& port);
     bool GetPeerIP(u32& ip, u16& port);
+    bool CanReceive();
+    bool CanSend();
     s32 Recieve(void* buf, size_t len);
     s32 RecieveFrom(void* buf, size_t len, u32 ip, u16 port);
     s32 Send(void* buf, size_t len);
     s32 SendTo(void* buf, size_t len, u32 ip, u16 port);
 
 private:
+    static bool Poll(PollFD* fds, size_t numfds, s64 timeout);
+
     Socket(s32 handle);
     s32 Fcntl(s32 cmd, ...);
     s32 RecieveFromImpl(void* buf, size_t len, u32* ip, u16* port);

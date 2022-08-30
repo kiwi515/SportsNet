@@ -424,6 +424,50 @@ bool Socket::GetPeerIP(u32& ip, u16& port) {
 }
 
 /**
+ * @brief Monitor sockets for events
+ *
+ * @param fds Poll information
+ * @param numfds Descriptor array length
+ * @param timeout Timeout (in milliseconds)
+ * @returns Success
+ */
+bool Socket::Poll(PollFD* fds, size_t numfds, s64 timeout) {
+    MATO_ASSERT_EX(sInitialized, "Please call Socket::initialize");
+
+    if (fds == NULL) {
+        return false;
+    }
+
+    MATO_ASSERT_EX(false, "Not yet implemented.");
+}
+
+/**
+ * @brief Check if there is a pending response
+ */
+bool Socket::CanReceive() {
+    PollFD fd;
+    fd.fd = mHandle;
+    fd.events = 1;
+    fd.revents = 0;
+
+    bool success = Poll(&fd, 1, 0);
+    return success && fd.events == fd.revents;
+}
+
+/**
+ * @brief Check if the socket can send data
+ */
+bool Socket::CanSend() {
+    PollFD fd;
+    fd.fd = mHandle;
+    fd.events = 8;
+    fd.revents = 0;
+
+    bool success = Poll(&fd, 1, 0);
+    return success && fd.events == fd.revents;
+}
+
+/**
  * @brief Receive data from bound connection
  *
  * @param buf Destination buffer
