@@ -87,6 +87,40 @@ u32 Socket::GetHostIP() {
 }
 
 /**
+ * @brief Monitor sockets for events
+ *
+ * @param fds Poll information
+ * @param numfds Descriptor array length
+ * @param timeout Timeout (OS time)
+ * @returns Success
+ */
+bool Socket::Poll(PollFD* fds, size_t numfds, s64 timeout) {
+    MATO_ASSERT_EX(sInitialized, "Please call Socket::initialize");
+
+    if (fds == NULL) {
+        return false;
+    }
+
+    // Setup data for ioctl
+    s64* ioctlTimeout = new (32) s64();
+    *ioctlTimeout = OS_TIME_TO_MILLI_SEC(timeout);
+    PollFD* ioctlFds = new (32) PollFD[numfds];
+    memcpy(ioctlFds, fds, numfds * sizeof(PollFD));
+
+    // Request poll
+    s32 result = IOS_Ioctl(sTcpStackHandle, IOCTL_POLL, ioctlTimeout,
+                           sizeof(s64), ioctlFds, numfds * sizeof(PollFD));
+    if (result >= 0) {
+        memcpy(fds, ioctlFds, numfds * sizeof(PollFD));
+    }
+
+    MATO_WARN_EX(result < 0, "Poll returned [%s]", GetErrorString(result));
+    delete ioctlTimeout;
+    delete ioctlFds;
+    return result >= 0;
+}
+
+/**
  * @brief Create a new socket
  *
  * @param type Socket type
@@ -421,40 +455,6 @@ bool Socket::GetPeerIP(u32& ip, u16& port) {
 
     MATO_WARN_EX(result < 0, "GetPeerIP returned [%s]", GetErrorString(result));
     delete data;
-    return result >= 0;
-}
-
-/**
- * @brief Monitor sockets for events
- *
- * @param fds Poll information
- * @param numfds Descriptor array length
- * @param timeout Timeout (OS time)
- * @returns Success
- */
-bool Socket::Poll(PollFD* fds, size_t numfds, s64 timeout) {
-    MATO_ASSERT_EX(sInitialized, "Please call Socket::initialize");
-
-    if (fds == NULL) {
-        return false;
-    }
-
-    // Setup data for ioctl
-    s64* ioctlTimeout = new (32) s64();
-    *ioctlTimeout = OS_TIME_TO_MILLI_SEC(timeout);
-    PollFD* ioctlFds = new (32) PollFD[numfds];
-    memcpy(ioctlFds, fds, numfds * sizeof(PollFD));
-
-    // Request poll
-    s32 result = IOS_Ioctl(sTcpStackHandle, IOCTL_POLL, ioctlTimeout,
-                           sizeof(s64), ioctlFds, numfds * sizeof(PollFD));
-    if (result >= 0) {
-        memcpy(fds, ioctlFds, numfds * sizeof(PollFD));
-    }
-
-    MATO_WARN_EX(result < 0, "Poll returned [%s]", GetErrorString(result));
-    delete ioctlTimeout;
-    delete ioctlFds;
     return result >= 0;
 }
 
