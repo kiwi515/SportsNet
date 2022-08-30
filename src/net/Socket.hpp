@@ -10,27 +10,11 @@ namespace spnet {
  */
 class Socket {
 public:
-    //! Socket Address/protocol family
-    enum Family {
-        PF_INET = 2,
-    };
-
     //! Socket types
-    enum SocketType {
+    enum Type {
         SOCK_STREAM = 1,
         SOCK_DGRAM,
     };
-
-    //! Socket transfer protocol
-    enum Protocol {
-        IPPROTO_AUTO,
-
-        IPPROTO_TCP = 6,
-        IPPROTO_UDP = 21,
-    };
-
-    //! Socket shutdown type
-    enum ShutdownType { SHUT_RD, SHUT_WR, SHUT_RDWR };
 
     struct InAddr {
         union {
@@ -58,9 +42,6 @@ public:
     };
 
 private:
-    static const u32 scAddrInfoMaxResults = 35;
-    static const u32 scAddrInfoNameSize = 28;
-
     //! I/O control commands for internal socket operation
     enum Ioctl {
         NONE,
@@ -180,46 +161,33 @@ private:
         ERROR_MAX
     };
 
-    //! Structure for get/free addr info
-    struct GetAddrInfoData {
-        AddrInfo results[scAddrInfoMaxResults];
-        char names[scAddrInfoMaxResults * scAddrInfoNameSize];
-    };
-
 public:
     static void Initialize();
     static const char* GetErrorString(s32 error);
-    static void GetHostID(InAddr& addr);
-    static bool GetAddrInfo(const char* node, const char* service,
-                            const AddrInfo* hints, AddrInfo** res);
-    static void FreeAddrInfo(AddrInfo* addr);
-    static const char* INetNtoA(const InAddr& addr, char* dst = NULL,
-                                size_t len = 0);
-    static bool INetAtoN(const char* addr, InAddr& dst);
+    static u32 GetHostIP();
 
-    Socket(Family domain, SocketType type, Protocol protocol);
+    Socket(Type type);
     virtual ~Socket();
 
     bool IsOpen() const { return mHandle >= 0; }
+    bool SetBlocking(bool block);
 
-    bool Close();
-    bool Listen(s32 backlog);
-    Socket* Accept(SockAddrIn* remote);
-    bool Bind(SockAddrIn& local);
-    bool Connect(SockAddrIn& remote);
+    Socket* Accept();
+    bool Bind(u16 port);
+    bool Connect(u32 ip, u16 port);
     bool Disconnect();
-    // bool SetBlocking(bool);
-    // bool SetAsync(bool);
-    bool GetPeerName(SockAddrIn& peer);
-    bool GetSocketName(SockAddrIn& peer);
-    s32 Recieve(void* buf, size_t len, u32 flags);
-    s32 RecieveFrom(void* buf, size_t len, u32 flags, SockAddrIn* from);
-    s32 Send(const void* buf, size_t len, u32 flags);
-    s32 SendTo(const void* buf, size_t len, u32 flags, const SockAddrIn* to);
-    bool Shutdown(ShutdownType type);
+    bool Listen(s32 backlog = 5);
+    bool GetSocketIP(u32& ip, u16& port);
+    bool GetPeerIP(u32& ip, u16& port);
+    s32 Recieve(void* buf, size_t len);
+    s32 RecieveFrom(void* buf, size_t len, u32 ip, u16 port);
+    s32 Send(void* buf, size_t len);
+    s32 SendTo(void* buf, size_t len, u32 ip, u16 port);
 
 private:
     Socket(s32 handle);
+    s32 RecieveFromImpl(void* buf, size_t len, u32* ip, u16* port);
+    s32 SendToImpl(const void* buf, size_t len, u32* ip, u16* port);
 
 private:
     s32 mHandle;
