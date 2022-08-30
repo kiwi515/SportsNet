@@ -16,31 +16,6 @@ public:
         SOCK_DGRAM,
     };
 
-    struct InAddr {
-        union {
-            u32 addr;
-            u8 octets[4];
-        };
-    };
-
-    struct SockAddrIn {
-        u8 len;
-        u8 family;
-        u16 port;
-        InAddr addr;
-    };
-
-    struct AddrInfo {
-        s32 flags;
-        s32 family;
-        s32 sockType;
-        s32 protocol;
-        s32 addrLen;
-        SockAddrIn* sockAddr;
-        char* canonName;
-        AddrInfo* next;
-    };
-
 private:
     //! I/O control commands for internal socket operation
     enum Ioctl {
@@ -159,6 +134,31 @@ private:
         EXDEV,
 
         ERROR_MAX
+    };
+
+    struct InAddr {
+        union {
+            u32 addr;
+            u8 octets[4];
+        };
+    };
+
+    struct SockAddrIn {
+        u8 len;
+        u8 family;
+        u16 port;
+        InAddr addr;
+    };
+
+    struct AddrInfo {
+        s32 flags;
+        s32 family;
+        s32 sockType;
+        s32 protocol;
+        s32 addrLen;
+        SockAddrIn* sockAddr;
+        char* canonName;
+        AddrInfo* next;
     };
 
 public:
