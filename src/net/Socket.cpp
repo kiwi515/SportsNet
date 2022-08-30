@@ -1,6 +1,7 @@
 #include "Socket.hpp"
 
 #include <IPC/ipcclt.h>
+#include <OS/OSTime.h>
 #include <TRK/__mem.h>
 #include <mato/math/matoAlgorithm.hpp>
 #include <stdio.h>
@@ -428,7 +429,7 @@ bool Socket::GetPeerIP(u32& ip, u16& port) {
  *
  * @param fds Poll information
  * @param numfds Descriptor array length
- * @param timeout Timeout (in milliseconds)
+ * @param timeout Timeout (OS time)
  * @returns Success
  */
 bool Socket::Poll(PollFD* fds, size_t numfds, s64 timeout) {
@@ -438,7 +439,23 @@ bool Socket::Poll(PollFD* fds, size_t numfds, s64 timeout) {
         return false;
     }
 
-    MATO_ASSERT_EX(false, "Not yet implemented.");
+    // Setup data for ioctl
+    s64* ioctlTimeout = new (32) s64();
+    *ioctlTimeout = OS_TIME_TO_MILLI_SEC(timeout);
+    PollFD* ioctlFds = new (32) PollFD[numfds];
+    memcpy(ioctlFds, fds, numfds * sizeof(PollFD));
+
+    // Request poll
+    s32 result = IOS_Ioctl(sTcpStackHandle, IOCTL_POLL, ioctlTimeout,
+                           sizeof(s64), ioctlFds, numfds * sizeof(PollFD));
+    if (result >= 0) {
+        memcpy(fds, ioctlFds, numfds * sizeof(PollFD));
+    }
+
+    MATO_WARN_EX(result < 0, "Poll returned [%s]", GetErrorString(result));
+    delete ioctlTimeout;
+    delete ioctlFds;
+    return result >= 0;
 }
 
 /**
