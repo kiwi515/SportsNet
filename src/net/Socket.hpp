@@ -186,6 +186,7 @@ public:
 
 private:
     Socket(s32 handle);
+    s32 Fcntl(s32 cmd, ...);
     s32 RecieveFromImpl(void* buf, size_t len, u32* ip, u16* port);
     s32 SendToImpl(const void* buf, size_t len, u32* ip, u16* port);
 

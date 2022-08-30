@@ -9,6 +9,11 @@
 #define PF_INET 2
 #define SHUT_RDWR 2
 
+#define F_GETFL 3
+#define F_SETFL 4
+
+#define O_NONBLOCK 0x4
+
 namespace spnet {
 
 bool Socket::sInitialized = false;
@@ -122,13 +127,54 @@ Socket::~Socket() {
 }
 
 /**
+ * @brief Control socket
+ *
+ * @param cmd Command
+ * @param ... Command arguments
+ * @returns Result
+ */
+s32 Socket::Fcntl(s32 cmd, ...) {
+    MATO_ASSERT_EX(sInitialized, "Please call Socket::initialize");
+
+    // Get argument
+    va_list list;
+    va_start(cmd, list);
+    s32 arg = *reinterpret_cast<s32*>(__va_arg(list, 1));
+    va_end(list);
+
+    // Setup data for ioctl
+    struct FcntlData {
+        s32 handle; // at 0x0
+        s32 cmd;    // at 0x4
+        s32 arg;    // at 0x8
+    };
+    FcntlData* data = new (32) FcntlData();
+    data->handle = mHandle;
+    data->cmd = cmd;
+    data->arg = arg;
+
+    s32 result = IOS_Ioctl(sTcpStackHandle, IOCTL_FCNTL, data,
+                           sizeof(FcntlData), NULL, 0);
+    MATO_WARN_EX(result < 0, "Fcntl returned [%s]", GetErrorString(result));
+    return result;
+}
+
+/**
  * @brief Toggle socket blocking
  *
  * @param block Whether to enable blocking
  * @returns Success
  */
 bool Socket::SetBlocking(bool block) {
-    MATO_ASSERT_EX(false, "Not yet implemented.");
+    s32 flags = Fcntl(F_GETFL, 0);
+
+    if (block) {
+        flags &= ~O_NONBLOCK;
+    } else {
+        flags |= O_NONBLOCK;
+    }
+
+    return Fcntl(F_SETFL, flags) >= 0;
 }
 
 /**
@@ -163,7 +209,6 @@ Socket* Socket::Accept() {
     }
 
     MATO_WARN_EX(handle < 0, "Accept returned [%s]", GetErrorString(handle));
-
     delete data;
     return child;
 }
