@@ -567,8 +567,8 @@ s32 Socket::RecieveFromImpl(void* buf, size_t len, u32* ip, u16* port) {
     vectors[V_BUFFER].length = len;
 
     // Source address
+    SockAddrIn* from = new (32) SockAddrIn();
     if (ip != NULL && port != NULL) {
-        SockAddrIn* from = new (32) SockAddrIn();
         from->len = 8;
         from->family = PF_INET;
         from->port = *port;
@@ -588,6 +588,7 @@ s32 Socket::RecieveFromImpl(void* buf, size_t len, u32* ip, u16* port) {
 
     // Free memory
     delete data;
+    delete from;
     for (int i = 0; i < V_MAX; i++) {
         delete vectors[i].base;
     }
@@ -606,7 +607,58 @@ s32 Socket::RecieveFromImpl(void* buf, size_t len, u32* ip, u16* port) {
  * @returns Bytes sent (< 0 if failure)
  */
 s32 Socket::SendToImpl(const void* buf, size_t len, u32* ip, u16* port) {
-    MATO_ASSERT_EX(false, "Not yet implemented.");
+    MATO_ASSERT_EX(sInitialized, "Please call Socket::initialize");
+
+    // Setup data for ioctl
+    enum SendToVectors {
+        V_BUFFER,    //!< I/O vector for user buffer
+        V_SEND_DATA, //!< I/O vector for SendToData
+        V_MAX,       //!< Total I/O vector count
+    };
+    IPCIOVector* vectors = new (32) IPCIOVector[V_MAX];
+
+    // SendToData
+    struct SendToData {
+        s32 handle;      // at 0x0
+        s32 flags;       // at 0x4
+        BOOL hasDest;    // at 0x8
+        SockAddrIn dest; // at 0xC
+        char UNK_0x14[0x28 - 0x14];
+    };
+    SendToData* data = new (32) SendToData();
+    data->handle = mHandle;
+    data->flags = 0;
+    vectors[V_SEND_DATA].base = data;
+    vectors[V_SEND_DATA].length = sizeof(SendToData);
+
+    // Destination address
+    if (ip != NULL && port != NULL) {
+        data->hasDest = TRUE;
+        data->dest.len = 8;
+        data->dest.family = PF_INET;
+        data->dest.port = *port;
+        data->dest.addr.addr = *ip;
+    } else {
+        data->hasDest = FALSE;
+    }
+
+    // User buffer
+    vectors[V_BUFFER].base = const_cast<void*>(buf);
+    vectors[V_BUFFER].length = len;
+
+    // Request send
+    s32 result = IOS_Ioctlv(sTcpStackHandle, IOCTL_SEND_TO, V_MAX, 0, vectors);
+    MATO_WARN_EX(result < 0, "SendToImpl returned [%s]",
+                 GetErrorString(result));
+
+    // Free memory
+    delete data;
+    for (int i = 0; i < V_MAX; i++) {
+        delete vectors[i].base;
+    }
+    delete[] vectors;
+
+    return result;
 }
 
 } // namespace spnet
