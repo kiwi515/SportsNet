@@ -9,6 +9,8 @@
 #RPSysSceneMgr
     sInstance__13RPSysSceneMgr=0x804bf4d8
     getCurrentScene__13RPSysSceneMgrCFv=0x80186100
+#RPSysSceneCreator
+    sSceneAttributeTable__17RPSysSceneCreator=0x803820f8
 #RPUtlRandom
     sSeed__11RPUtlRandom=0x804bf688
 #RPGolCollisionModel
