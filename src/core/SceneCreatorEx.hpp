@@ -68,11 +68,19 @@ public:
     };
 
 public:
-    static RPSysScene* Create(EScene);
-    static RPSysScene* CreateImpl(EScene);
+    static RPSysScene* Create(EScene id);
+    static RPSysScene* CreateImpl(EScene id);
 
-    // TO-DO: Getters for each attribute field
-    // Replace inlined calls of RP functions with branches to ex functions
+    static EPack GetPackID(EScene id);
+    static s32 GetCreateType(EScene id);
+    static bool GetShowLoadingText(EScene id);
+    static s32 GetExitType(EScene id);
+    static bool GetUseCommonSound(EScene id);
+    static const char* GetResDirName(EScene id);
+    static const char* GetSceneName(EScene id);
+
+private:
+    static s32 GetTableIndex(EScene id);
 
 private:
     static const SceneAttributes sSceneAttrTable[SCENE_MAX];

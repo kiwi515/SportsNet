@@ -1,5 +1,7 @@
 #include "SceneCreatorEx.hpp"
 
+#include "LobbyScene.hpp"
+
 #include <RPSystem/RPSysSceneCreator.h>
 #include <TRK/__mem.h>
 
@@ -21,13 +23,91 @@ RPSysScene* SceneCreatorEx::Create(EScene id) {
 RPSysScene* SceneCreatorEx::CreateImpl(EScene id) {
     switch (id) {
     case SPNET_LOBBY_SCENE:
-        // TO-DO
-        return NULL;
+        return new LobbyScene();
     default:
         return NULL;
     }
 }
-kmBranch(0x80184448, SceneCreatorEx::CreateSportsNetScene);
+kmBranch(0x80184448, SceneCreatorEx::CreateImpl);
+
+/**
+ * @brief Get index into attributes table by scene id
+ * @note Might seem redundant but the table is not guaranteed to be in order
+ * @param id Scene ID
+ */
+s32 SceneCreatorEx::GetTableIndex(EScene id) {
+    for (int i = 0; i < SCENE_MAX; i++) {
+        if (sSceneAttrTable[i].scene == id) {
+            return i;
+        }
+    }
+
+    MATO_ASSERT_EX(false, "Scene missing from table: %d", id);
+    return -1;
+}
+
+/**
+ * @brief Get pack ID from scene
+ *
+ * @param id Scene ID
+ */
+SceneCreatorEx::EPack SceneCreatorEx::GetPackID(EScene id) {
+    return (EPack)sSceneAttrTable[GetTableIndex(id)].pack;
+}
+
+/**
+ * @brief Get create type from scene
+ *
+ * @param id Scene ID
+ */
+s32 SceneCreatorEx::GetCreateType(EScene id) {
+    return sSceneAttrTable[GetTableIndex(id)].createType;
+}
+
+/**
+ * @brief Check if scene should show the loading screen text
+ *
+ * @param id Scene ID
+ */
+bool SceneCreatorEx::GetShowLoadingText(EScene id) {
+    return sSceneAttrTable[GetTableIndex(id)].showLoadingText;
+}
+
+/**
+ * @brief Get exit type from scene
+ *
+ * @param id Scene ID
+ */
+s32 SceneCreatorEx::GetExitType(EScene id) {
+    return sSceneAttrTable[GetTableIndex(id)].exitType;
+}
+
+/**
+ * @brief Check if scene should use the RP common sound archive
+ *
+ * @param id Scene ID
+ */
+bool SceneCreatorEx::GetUseCommonSound(EScene id) {
+    return sSceneAttrTable[GetTableIndex(id)].useCommonSound;
+}
+
+/**
+ * @brief Get resource directory from scene
+ *
+ * @param id Scene ID
+ */
+const char* SceneCreatorEx::GetResDirName(EScene id) {
+    return sSceneAttrTable[GetTableIndex(id)].resDirName;
+}
+
+/**
+ * @brief Get scene name
+ *
+ * @param id Scene ID
+ */
+const char* SceneCreatorEx::GetSceneName(EScene id) {
+    return sSceneAttrTable[GetTableIndex(id)].sceneName;
+}
 
 //! Scene attribute table
 const SceneCreatorEx::SceneAttributes
