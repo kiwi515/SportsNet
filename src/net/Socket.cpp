@@ -9,11 +9,10 @@
 
 #define PF_INET 2
 #define SHUT_RDWR 2
-
 #define F_GETFL 3
 #define F_SETFL 4
-
 #define O_NONBLOCK 0x4
+#define INADDR_ANY 0
 
 namespace spnet {
 
@@ -270,7 +269,8 @@ bool Socket::Bind(u16 port) {
     data->dest.len = 8;
     data->dest.family = PF_INET;
     data->dest.port = port;
-    data->dest.addr.addr = 0;
+    // Bind to local address
+    data->dest.addr.addr = INADDR_ANY;
 
     // Request bind
     s32 result =
@@ -318,11 +318,10 @@ bool Socket::Connect(u32 ip, u16 port) {
  *
  * @returns Success
  */
-bool Socket::Disconnect() {
+void Socket::Disconnect() {
     MATO_ASSERT_EX(sInitialized, "Please call Socket::initialize");
 
     s32 result;
-    bool success = true;
 
     if (mHandle >= 0) {
         // Setup data for shutdown ioctl
@@ -339,7 +338,6 @@ bool Socket::Disconnect() {
                            sizeof(ShutdownData), NULL, 0);
         MATO_WARN_EX(result < 0, "Shutdown returned [%s]",
                      GetErrorString(result));
-        success = success && result >= 0;
         delete sdData;
 
         // Setup data for close ioctl
@@ -353,12 +351,10 @@ bool Socket::Disconnect() {
         result = IOS_Ioctl(sTcpStackHandle, IOCTL_CLOSE, clData,
                            sizeof(CloseData), NULL, 0);
         MATO_WARN_EX(result < 0, "Close returned [%s]", GetErrorString(result));
-        success = success && result >= 0;
         delete clData;
     }
 
     mHandle = -1;
-    return success;
 }
 
 /**
@@ -542,7 +538,62 @@ s32 Socket::SendTo(void* buf, size_t len, u32 ip, u16 port) {
  * @returns Bytes received (< 0 if failure)
  */
 s32 Socket::RecieveFromImpl(void* buf, size_t len, u32* ip, u16* port) {
-    MATO_ASSERT_EX(false, "Not yet implemented.");
+    MATO_ASSERT_EX(sInitialized, "Please call Socket::initialize");
+
+    // Setup data for ioctl
+    enum ReceiveFromVectors {
+        V_RECV_DATA, //!< I/O vector for ReceiveFromData
+        V_BUFFER,    //!< I/O vector for user buffer
+        V_FROM,      //!< I/O vector for source address
+        V_MAX,       //!< Total I/O vector count
+        V_INPUT = 1, //!< Total input I/O vector count
+        V_OUTPUT = 2 //!< Total output I/O vector count
+    };
+    IPCIOVector* vectors = new (32) IPCIOVector[V_MAX];
+
+    // ReceiveFromData
+    struct ReceiveFromData {
+        s32 handle; // at 0x0
+        s32 flags;  // at 0x4
+    };
+    ReceiveFromData* data = new (32) ReceiveFromData();
+    data->handle = mHandle;
+    data->flags = 0;
+    vectors[V_RECV_DATA].base = data;
+    vectors[V_RECV_DATA].length = sizeof(ReceiveFromData);
+
+    // User buffer
+    vectors[V_BUFFER].base = buf;
+    vectors[V_BUFFER].length = len;
+
+    // Source address
+    if (ip != NULL && port != NULL) {
+        SockAddrIn* from = new (32) SockAddrIn();
+        from->len = 8;
+        from->family = PF_INET;
+        from->port = *port;
+        from->addr.addr = *ip;
+        vectors[V_FROM].base = from;
+        vectors[V_FROM].length = from->len;
+    } else {
+        vectors[V_FROM].base = NULL;
+        vectors[V_FROM].length = 0;
+    }
+
+    // Request receive
+    s32 result = IOS_Ioctlv(sTcpStackHandle, IOCTL_RECV_FROM, V_INPUT, V_OUTPUT,
+                            vectors);
+    MATO_WARN_EX(result < 0, "ReceiveFromImpl returned [%s]",
+                 GetErrorString(result));
+
+    // Free memory
+    delete data;
+    for (int i = 0; i < V_MAX; i++) {
+        delete vectors[i].base;
+    }
+    delete[] vectors;
+
+    return result;
 }
 
 /**

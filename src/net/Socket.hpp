@@ -5,7 +5,7 @@
 namespace spnet {
 
 /**
- * @brief TCP/IP socket wrapper
+ * @brief IOS socket wrapper
  * @note IPv4 only
  */
 class Socket {
@@ -181,7 +181,7 @@ public:
     Socket* Accept();
     bool Bind(u16 port);
     bool Connect(u32 ip, u16 port);
-    bool Disconnect();
+    void Disconnect();
     bool Listen(s32 backlog = 5);
     bool GetSocketIP(u32& ip, u16& port);
     bool GetPeerIP(u32& ip, u16& port);
