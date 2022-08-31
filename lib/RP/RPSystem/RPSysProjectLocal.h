@@ -50,6 +50,8 @@ public:
     static RPSysProjectLocal* CreateInstance(EGG::Heap* heap);
     static RPSysProjectLocal* getInstance() { return sInstance; }
 
+    s32 getPackID() const { return mPackID; }
+
     //! @address 80186234
     void setLanguage(ERegion lang);
     //! @address 8018623c

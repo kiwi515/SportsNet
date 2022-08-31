@@ -1,5 +1,5 @@
+#include "NetplayMgr.hpp"
 #include "Socket.hpp"
-#include "SocketTest.hpp"
 #include "types.h"
 
 #include <mato/kernel/matoMapFile.hpp>
@@ -16,10 +16,7 @@ void spnet_main() {
 
     // Initialize networking
     Socket::Initialize();
-
-#ifndef NDEBUG
-    SocketTest::DoTest();
-#endif
+    NetplayMgr::CreateInstance();
 }
 kmBranch(0x80182ee8, spnet_main);
 

@@ -31,6 +31,9 @@ public:
     static void CreateInstance();
     static RPSportsSequenceMgr* GetInstance() { return sInstance; }
 
+    u32 GetSport() const { return (u32)mSport; }
+    u32 GetSequence() const { return mSequence; }
+
     /**
      * @brief Reset data
      * @address 801e72d0

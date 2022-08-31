@@ -31,6 +31,11 @@
     sSceneAttributeTable__17RPSysSceneCreator=0x803820f8
     sInstance__17RPSysSceneCreator=0x804bf4c8
     createSportsScene__17RPSysSceneCreatorFl=0x80184000
+    getSceneID__17RPSysSceneCreatorFl=0x80184690
+#RPSysProjectLocal
+    sInstance__17RPSysProjectLocal=0x804bf4e0
+#RPSysQueuedScene
+    sInstance__16RPSysQueuedScene=0x804bf4f8
 #IRPSysHostIOSocket
     __ct__18IRPSysHostIOSocketFv=0x801907d4
 #RPSysNunchukScene
@@ -44,6 +49,8 @@
     setSystemSeFadeInFrame__13RPSndAudioMgrFs=0x801b73d4
 #RPUtlRandom
     sSeed__11RPUtlRandom=0x804bf688
+#RPSportsSequenceMgr
+    sInstance__19RPSportsSequenceMgr=0x804bf708
 #RPGolCollisionModel
     sInstance__19RPGolCollisionModel=0x804bf908
 #RPGolPlayerManager

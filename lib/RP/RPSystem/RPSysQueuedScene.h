@@ -14,7 +14,9 @@ class RPSysQueuedScene {
 public:
     //! @address 80187ba0
     static RPSysQueuedScene* CreateInstance(EGG::Heap* heap);
-    static RPSysQueuedScene* getInstance() { return sInstance; }
+    static RPSysQueuedScene* GetInstance() { return sInstance; }
+
+    s32 GetSceneID() const { return mSceneID; }
 
     /**
      * @brief Reset the queued scene to -1
