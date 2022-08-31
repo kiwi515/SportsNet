@@ -21,7 +21,7 @@
 //! @brief Assert a condition and halt execution when it fails to hold
 #define MATO_ASSERT(exp)                                                       \
     if (!(exp))                                                                \
-    mato_fail_assert(__FILE__, __LINE__, #exp "\n")
+    mato_fail_assert(__FILE__, __LINE__, #exp)
 
 //! @brief Assert a condition and halt execution when it fails to hold,
 //! displaying a custom error message

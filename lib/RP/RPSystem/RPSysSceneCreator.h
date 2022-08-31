@@ -85,6 +85,9 @@ public:
     static RPSysSceneCreator* CreateInstance(EGG::Heap* heap);
     static RPSysSceneCreator* getInstance() { return sInstance; }
 
+    s32 getLastSceneID() const { return mLastSceneID; }
+    void setLastSceneID(s32 scene) { mLastSceneID = scene; }
+
     /**
      * @brief Fade out into a new scene, optionally reloading the current scene
      * @address 80184ba4
@@ -129,7 +132,7 @@ public:
     virtual void destroy(s32);
 
 private:
-    RPSysSceneCreator(EGG::Heap* heap) : mParentHeap(heap), mSceneId(-1) {}
+    RPSysSceneCreator(EGG::Heap* heap) : mParentHeap(heap), mLastSceneID(-1) {}
     //! @address 80183f68
     virtual ~RPSysSceneCreator() {}
 
@@ -137,7 +140,7 @@ private:
     //! @brief Heap in which this object was allocated
     EGG::Heap* mParentHeap; // at 0x4
     //! @brief Last created scene's ID
-    int mSceneId; // at 0x8
+    s32 mLastSceneID; // at 0x8
 
     /**
      * @brief Configuration for all supported Pack Project scenes

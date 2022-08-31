@@ -6,12 +6,42 @@
     sRootMem1__11RPSysSystem=0x804a3d68
     sRootMem2__11RPSysSystem=0x804a3d6c
     sSystemHeap__11RPSysSystem=0x804a3d74
+#RPSysScene
+    __ct__10RPSysSceneFv=0x80185404
+    taskAsync__10RPSysSceneFv=0x8018559c
+    pauseCallBack__10RPSysSceneFb=0x80185594
+    getDebugHeap__10RPSysSceneFv=0x8018558c
+    outgoing_childCreate__10RPSysSceneFv=0x80185008
+    incoming_childDestroy__10RPSysSceneFv=0x80185168
+    reinit__10RPSysSceneFv=0x8018522c
+    exit__10RPSysSceneFv=0x80184f90
+    enter__10RPSysSceneFv=0x80185304
+    draw__10RPSysSceneFv=0x80185048
+    calc__10RPSysSceneFv=0x80185094
+    setShowLoadingText__10RPSysSceneFv=0x80186cec
+    disableFadeIn__10RPSysSceneFv=0x80184e80
+    setCreatorSceneID__10RPSysSceneFi=0x80184e98
 #RPSysSceneMgr
     sInstance__13RPSysSceneMgr=0x804bf4d8
     getCurrentScene__13RPSysSceneMgrCFv=0x80186100
+    isTaskFinished__13RPSysSceneMgrFv=0x80185968
+    changeNextSceneAfterFade__13RPSysSceneMgrFib=0x80185d74
+    getFadeFrame__13RPSysSceneMgrFv=0x80185d28
 #RPSysSceneCreator
     sSceneAttributeTable__17RPSysSceneCreator=0x803820f8
     sInstance__17RPSysSceneCreator=0x804bf4c8
+    createSportsScene__17RPSysSceneCreatorFl=0x80184000
+#IRPSysHostIOSocket
+    __ct__18IRPSysHostIOSocketFv=0x801907d4
+#RPSysNunchukScene
+    __vt__17RPSysNunchukScene=0x803c2338
+#RPSysPlayerSelectScene
+    __vt__22RPSysPlayerSelectScene=0x803c1fd8
+#RPSysBootScene
+    __vt__14RPSysBootScene=0x803c1f78
+#RPSndAudioMgr
+    sInstance__13RPSndAudioMgr=0x804bf644
+    setSystemSeFadeInFrame__13RPSndAudioMgrFs=0x801b73d4
 #RPUtlRandom
     sSeed__11RPUtlRandom=0x804bf688
 #RPGolCollisionModel
@@ -44,6 +74,8 @@
     __ct__Q23EGG10ColorFaderFffffQ34nw4r2ut5ColorQ33EGG5Fader7EStatus=0x800a453c
 #eggSystem
     mConfigData__Q23EGG10BaseSystem=0x804becb8
+#eggScene
+    __dt__Q23EGG5SceneFv=0x800ab074
 #eggController
     sInstance__Q23EGG17CoreControllerMgr=0x804bece8
     getNthController__Q23EGG17CoreControllerMgrFi=0x800a67e4

@@ -2,17 +2,18 @@
 #define SPORTSNET_CORE_SCENE_CREATOR_EX_H
 #include "types.h"
 
-#include <RP/types_RP.h>
+#include <RPSystem/RPSysScene.h>
+#include <RPSystem/RPSysSceneCreator.h>
 
 namespace spnet {
 
 /**
  * @brief RP scene creator extension to support SportsNet scenes
  */
-class SceneCreatorEx {
+class SceneCreatorEx : public RPSysSceneCreator {
 public:
     //! All game scenes
-    enum EScene {
+    enum ESceneIDEx {
         // RP scenes
         RP_BOOT_SCENE,
         RP_PLAYER_SELECT_SCENE,
@@ -38,49 +39,34 @@ public:
         RP_SCENE_MAX = RP_GOL_SELECT_SCENE + 1
     };
 
-    //! Pack Project titles
-    enum EPack {
-        RP_SPORTS_PACK, //!< Wii Sports
-        RP_PARTY_PACK,  //!< Wii Play
-        RP_HEALTH_PACK, //!< Wii Fit
-        RP_MUSIC_PACK,  //!< Wii Music
-        RP_ALL_PACK     //!< Pack Project
-    };
-
-    //! Specific scene attributes
-    struct SceneAttributes {
-        //! @brief Scene ID
-        s32 scene;
-        //! @brief Pack ID
-        s32 pack;
-        //! @brief How to create the scene
-        s32 createType;
-        //! @brief Toggle "Now Loading" text (unused)
-        s32 showLoadingText;
-        //! @brief How to exit the scene
-        s32 exitType;
-        //! @brief Whether to use the RP common sound archive
-        s32 useCommonSound;
-        //! @brief Scene file directory
-        const char* resDirName;
-        //! @brief Proper name (unused lookup feature?)
-        const char* sceneName;
-    };
-
 public:
-    static RPSysScene* Create(EScene id);
-    static RPSysScene* CreateImpl(EScene id);
+    static SceneCreatorEx& GetInstance() {
+        RPSysSceneCreator* base = RPSysSceneCreator::getInstance();
+        MATO_ASSERT(base != NULL);
+        return *reinterpret_cast<SceneCreatorEx*>(base);
+    }
 
-    static EPack GetPackID(EScene id);
-    static s32 GetCreateType(EScene id);
-    static bool GetShowLoadingText(EScene id);
-    static s32 GetExitType(EScene id);
-    static bool GetUseCommonSound(EScene id);
-    static const char* GetResDirName(EScene id);
-    static const char* GetSceneName(EScene id);
+    RPSysScene* Create(ESceneIDEx id);
+    RPSysScene* CreateSystemScene(ESceneIDEx id);
+    RPSysScene* CreateSportsScene(ESceneIDEx id);
+    RPSysScene* CreateSportsNetScene(ESceneIDEx id);
+    bool ChangeSceneAfterFade(ESceneIDEx id, bool reload);
+
+    EPackID GetPackID(ESceneIDEx id) const;
+    s32 GetCreateType(ESceneIDEx id) const;
+    bool GetShowLoadingText(ESceneIDEx id) const;
+    s32 GetExitType(ESceneIDEx id) const;
+    bool GetUseCommonSound(ESceneIDEx id) const;
+    const char* GetResDirName(ESceneIDEx id) const;
+    const char* GetSceneName(ESceneIDEx id) const;
 
 private:
-    static s32 GetTableIndex(EScene id);
+    // SceneCreatorEx should not be instantiated
+    SceneCreatorEx();
+    SceneCreatorEx(const SceneCreatorEx&);
+    ~SceneCreatorEx();
+
+    s32 GetTableIndex(ESceneIDEx id) const;
 
 private:
     static const SceneAttributes sSceneAttrTable[SCENE_MAX];

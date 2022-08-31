@@ -36,10 +36,11 @@ public:
     virtual void outgoing_childCreate();
 
     /**
-     * @brief Returns address of DAT_804bf4d0
+     * @brief Access debug heap
      * @address 8018558c
      */
-    virtual UNKTYPE* VF38(UNKTYPE);
+    virtual EGG::Heap* getDebugHeap();
+
     /**
      * @brief Callback for pause/unpause
      * @address 80185594
@@ -219,21 +220,15 @@ private:
     //! @brief TODO, constructor at 801988d8
     //! @details Some particle related structure
     UNKTYPE* PTR_0x34;
-    /**
-     * @brief Local scene heap (speculative)
-     * Is passed to RPSysSystem::FUN_80183518 when non-null (never happens)
-     * which would call the VF @ 0x1C (would be Heap::destroy if ptr was to a
-     * Heap), and RPSysSystem has destroyHeap(EGG::Heap *) in WFU
-     */
+    //! @brief Scene heap (unused)
     EGG::Heap* mHeap; // at 0x38
     //! @brief Scene flags
     u32 mFlags; // at 0x3C
     //! @brief Scene ID set by scene creator
     int mCreatorSceneId; // at 0x40
 
-    //! @brief Unknown, unused global object
-    //! @details VF38 will return its address
-    static UNKWORD DAT_804bf4d0; // 804bf4d0
+    //! @brief Debug heap (unused)
+    static EGG::Heap* sDebugHeap; // 804bf4d0
 
     //! @brief Defined in RPSysLoadScene.cpp
     static EGG::Vector3f DAT_804a3db0[3]; // 804a3db0

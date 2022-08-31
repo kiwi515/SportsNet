@@ -15,6 +15,25 @@
 
 #define ARRAY_LENGTH(x) (sizeof((x)) / sizeof((x)[0]))
 
+//! @brief Create dummy function to call a member function
+#define kmInjectMF(cls, func)                                                  \
+    static UNKWORD KM_HOOK_MF_##cls##_##func(void* arg, ...) {                 \
+        typedef UNKWORD (cls::*##cls##_fun_t)(...);                            \
+        const cls##_fun_t mem_fun = (cls##_fun_t)(cls::func);                  \
+        cls* self = reinterpret_cast<cls*>(arg);                               \
+        return (self->*mem_fun)();                                             \
+    }
+
+//! @brief Call hook a member/thiscall function
+#define kmCallMF(addr, cls, func)                                              \
+    kmInjectMF(cls, func);                                                     \
+    kmCall(addr, KM_HOOK_MF_##cls##_##func);
+
+//! @brief Branch hook a member/thiscall function
+#define kmBranchMF(addr, cls, func)                                            \
+    kmInjectMF(cls, func);                                                     \
+    kmBranch(addr, KM_HOOK_MF_##cls##_##func);
+
 typedef unsigned long long u64;
 typedef signed long long s64;
 
