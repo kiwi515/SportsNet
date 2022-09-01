@@ -2,6 +2,8 @@
 #define RP_SPORTS_MENU_BG_MODEL_H
 #include "types_RP.h"
 
+#include <egg/types_egg.h>
+
 class RPSportsMenuBGModel {
 public:
     RPSportsMenuBGModel(u8 view, u8 lightMgr, u8 color);

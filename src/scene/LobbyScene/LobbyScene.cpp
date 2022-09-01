@@ -11,15 +11,12 @@
 
 namespace spnet {
 
-LobbyScene::LobbyScene() : mMenuModel(NULL) {
-    ;
-    ;
+LobbyScene::LobbyScene() {
+    mBGModel = new MenuBGModel();
+    MATO_ASSERT(mBGModel != NULL);
 }
 
-LobbyScene::~LobbyScene() {
-    ;
-    ;
-}
+LobbyScene::~LobbyScene() { delete mBGModel; }
 
 void LobbyScene::Configure() {
     // Setup BG model scene
@@ -36,14 +33,13 @@ void LobbyScene::Configure() {
     RPGrpRenderer::GetInstance()->CreateView2D(1, screen);
 
     // Setup BG model
-    mMenuModel = new RPSportsMenuBGModel(0, 0, 0);
-    MATO_ASSERT(mMenuModel != NULL);
+    mBGModel->Configure(MenuBGModel::COLOR_BLUE);
 
     // Finalize view
     RPGrpRenderer::GetInstance()->CorrectView();
 }
 
-void LobbyScene::LoadResource() { mMenuModel->LoadResource(NULL); }
+void LobbyScene::LoadResource() { mBGModel->LoadResource(); }
 
 void LobbyScene::Reset() {
     // Setup cursor
@@ -51,13 +47,13 @@ void LobbyScene::Reset() {
     RPSysCursorDrawMgr::GetInstance()->createActiveCursor();
 
     // Reset graphics
-    mMenuModel->Reset();
+    mBGModel->Reset();
 
     // Play BGM
     RPSndAudioMgr::getInstance()->startSound(STRM_Training_Select);
 }
 
-void LobbyScene::Calculate() { mMenuModel->Calculate(); }
+void LobbyScene::Calculate() { mBGModel->Calculate(); }
 
 void LobbyScene::Exit() {
     ;

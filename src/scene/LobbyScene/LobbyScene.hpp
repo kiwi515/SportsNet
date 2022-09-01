@@ -1,5 +1,6 @@
-#ifndef SPORTSNET_SCENE_LOBBYSCENE_H
-#define SPORTSNET_SCENE_LOBBYSCENE_H
+#ifndef SPORTSNET_LOBBY_SCENE_H
+#define SPORTSNET_LOBBY_SCENE_H
+#include "MenuBGModel.hpp"
 #include "types.h"
 
 #include <RPSystem/RPSysScene.h>
@@ -21,7 +22,7 @@ public:
     virtual void UserDraw();
 
 private:
-    RPSportsMenuBGModel* mMenuModel;
+    MenuBGModel* mBGModel;
 };
 
 } // namespace spnet
