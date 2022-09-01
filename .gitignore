@@ -7,6 +7,7 @@ romfs/
 riivo/spnet/
 distro/
 
+*.carc
 *.dol
 *.bin
 *.o

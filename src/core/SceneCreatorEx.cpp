@@ -134,6 +134,52 @@ bool SceneCreatorEx::ChangeSceneAfterFade(ESceneIDEx next, bool reload) {
 kmBranchMF(0x80184ba4, SceneCreatorEx, ChangeSceneAfterFade);
 
 /**
+ * @brief Convert sport ID to scene ID
+ *
+ * @param sport Sport ID
+ */
+SceneCreatorEx::ESceneIDEx SceneCreatorEx::GetSceneID(ESportID sport) const {
+    switch (sport) {
+    case SPORT_BASEBALL:
+        return RP_BSB_SCENE;
+    case SPORT_TENNIS:
+        return RP_TNS_SCENE;
+    case SPORT_GOLF:
+        return RP_GOL_SCENE;
+    case SPORT_BOXING:
+        return RP_BOX_SCENE;
+    case SPORT_BOWLING:
+        return RP_BOW_SCENE;
+    default:
+        return RP_SPORTS_MENU_SCENE;
+    }
+}
+kmBranchMF(0x80184690, SceneCreatorEx, GetSceneID);
+
+/**
+ * @brief Convert scene ID to sport ID
+ *
+ * @param scene Scene ID
+ */
+SceneCreatorEx::ESportID SceneCreatorEx::GetSportID(ESceneIDEx scene) const {
+    switch (scene) {
+    case RP_BSB_SCENE:
+        return SPORT_BASEBALL;
+    case RP_TNS_SCENE:
+        return SPORT_TENNIS;
+    case RP_GOL_SCENE:
+        return SPORT_GOLF;
+    case RP_BOX_SCENE:
+        return SPORT_BOXING;
+    case RP_BOW_SCENE:
+        return SPORT_BOWLING;
+    default:
+        return SPORT_BASEBALL;
+    }
+}
+kmBranchMF(0x801846ec, SceneCreatorEx, GetSportID);
+
+/**
  * @brief Get index into attributes table by scene id
  * @note Might seem redundant but the table is not guaranteed to be in order
  * @param id Scene ID

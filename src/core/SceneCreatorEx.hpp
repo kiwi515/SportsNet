@@ -107,6 +107,9 @@ public:
     RPSysScene* CreateSportsNetScene(ESceneIDEx id);
     bool ChangeSceneAfterFade(ESceneIDEx id, bool reload);
 
+    ESceneIDEx GetSceneID(ESportID id) const;
+    ESportID GetSportID(ESceneIDEx id) const;
+
     EPackID GetPackID(ESceneIDEx id) const;
     s32 GetCreateType(ESceneIDEx id) const;
     bool GetShowLoadingText(ESceneIDEx id) const;

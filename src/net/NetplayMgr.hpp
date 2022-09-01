@@ -18,6 +18,13 @@ public:
     }
 
     bool IsOnlinePlay() const { return mIsOnlinePlay; }
+    void SetOnlinePlay(bool online) { mIsOnlinePlay = online; }
+
+    bool IsServer() const { return mIsServer; }
+    bool IsClient() const { return !mIsServer; }
+
+    const char* GetPlayerName(u32 player);
+    void SetPlayerName(u32 player, const char* name);
 
 private:
     NetplayMgr();
@@ -25,7 +32,15 @@ private:
     virtual ~NetplayMgr();
 
 private:
+    static const u32 scMaxPlayers = 4;
+    static const u32 scPlayerNameLength = 10;
+
+    //! Whether online play is enabled
     bool mIsOnlinePlay;
+    //! Whether the console is the room server
+    bool mIsServer;
+    //! Mii names of other players in the room
+    char mPlayerNames[scPlayerNameLength][scMaxPlayers];
 
     static NetplayMgr* sInstance;
 };

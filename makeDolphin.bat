@@ -14,3 +14,4 @@ python make.py --region=NTSC_U
 xcopy "build/main_NTSC_U.dol" "romfs/NTSC_U/sys/main.dol" /y /f /i
 xcopy "build/modules/SportsNet_NTSC_U.bin" "romfs/NTSC_U/files/modules/SportsNet_NTSC_U.bin" /y /f /i
 xcopy "build/modules/SportsNet_NTSC_U.map" "romfs/NTSC_U/files/modules/SportsNet_NTSC_U.map" /y /f /i
+xcopy "assets" "romfs/NTSC_U/files" /E /C /I /y

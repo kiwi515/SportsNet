@@ -17,6 +17,9 @@ void spnet_main() {
     // Initialize networking
     Socket::Initialize();
     NetplayMgr::CreateInstance();
+
+    // FOR LOBBY TEST
+    NetplayMgr::GetInstance().SetOnlinePlay(true);
 }
 kmBranch(0x80182ee8, spnet_main);
 
