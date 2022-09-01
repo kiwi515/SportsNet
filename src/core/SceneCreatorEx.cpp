@@ -273,9 +273,9 @@ const SceneCreatorEx::SceneAttributes
     SceneCreatorEx::sSceneAttrTable[SceneCreatorEx::SCENE_MAX] = {
         // clang-format off
     // Scene                       pack          c    s    e    u       resDir                 name
-    {RP_BOOT_SCENE,             RP_ALLPACK,     0, false, 1, true,  "RPCommon/",             "ロゴ"},
-    {RP_PLAYER_SELECT_SCENE,    RP_ALLPACK,     0, false, 2, true,  "RPCommon/",             "プレイヤーセレクト"},
-    {RP_NUNCHAKU_SCENE,         RP_ALLPACK,     1, false, 3, false, "RPCommon/",             "ヌンチャクチェック"},
+    {RP_BOOT_SCENE,             RP_ALLPACK,      0, false, 1, true,  "RPCommon/",             "ロゴ"},
+    {RP_PLAYER_SELECT_SCENE,    RP_ALLPACK,      0, false, 2, true,  "RPCommon/",             "プレイヤーセレクト"},
+    {RP_NUNCHAKU_SCENE,         RP_ALLPACK,      1, false, 3, false, "RPCommon/",             "ヌンチャクチェック"},
     {RP_BSB_SCENE,              RP_SPORTS_PACK,  1, false, 0, false, "RPBsbScene/",           "野球"},
     {RP_BOW_SCENE,              RP_SPORTS_PACK,  1, false, 0, false, "RPBowScene/",           "ボウリング"},
     {RP_GOL_SCENE,              RP_SPORTS_PACK,  1, false, 0, false, "RPGolScene/",           "ゴルフ"},
@@ -289,6 +289,7 @@ const SceneCreatorEx::SceneAttributes
     {RP_PHYSICAL_RESULT_SCENE,  RP_SPORTS_PACK,  1, false, 3, true,  "RPSportsPhysical/",     "体力測定結果"},
     {RP_GOL_SELECT_SCENE,       RP_SPORTS_PACK,  1, false, 0, false, "RPGolScene/",           "ゴルフコースセレクト"},
     // SportsNet scenes
+    {SPNET_NET_SELECT_SCENE,    RP_SPORTS_PACK,  1, false, 2, true,  "NetSelectScene/",       "Network Select Scene"},
     {SPNET_LOBBY_SCENE,         RP_SPORTS_PACK,  1, false, 2, true,  "LobbyScene/",           "Lobby Scene"}
         // clang-format on
 };
