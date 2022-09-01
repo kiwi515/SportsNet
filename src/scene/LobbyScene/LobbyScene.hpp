@@ -21,6 +21,7 @@ public:
     virtual void UserDraw();
 
 private:
+    RPSportsMenuBGModel* mMenuModel;
 };
 
 } // namespace spnet

@@ -6,7 +6,7 @@ class RPGrpModelManager {
 public:
     static RPGrpModelManager* GetInstance() { return sInstance; }
 
-    void CreateResourceList(u16);
+    void CreateModelScene(u32, u8, u32, RPGrpLightManager*, RPGrpFogManager*);
 
 private:
     static RPGrpModelManager* sInstance;

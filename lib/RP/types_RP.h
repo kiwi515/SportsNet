@@ -66,6 +66,7 @@ struct RPSportsBaseScene;
 struct RPSportsMenuBGModel;
 struct RPSportsMenuLogoModel;
 struct RPSportsTrainingResult;
+struct RPSportsPhysicalPreviewScene;
 struct RPBoxBoxer;
 struct RPBoxBoxerEnergy;
 struct RPBoxBoxerCombo;

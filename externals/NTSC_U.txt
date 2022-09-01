@@ -12,6 +12,10 @@
     GetFileFromArchive__20RPSysResourceManagerFPQ23EGG7ArchivePCcPUl=0x80187878
     sInstance__20RPSysResourceManager=0x804bf4f0
     GetMessageResource__20RPSysResourceManagerFPCc=0x8018783c
+#RPSysCursorDrawMgr
+    sInstance__18RPSysCursorDrawMgr=0x804bf598
+    startDpdCheck__18RPSysCursorDrawMgrFv=0x801a00fc
+    createActiveCursor__18RPSysCursorDrawMgrFv=0x8019ff0c
 #RPSysLayout
     create__11RPSysLayoutFPQ23EGG4HeapP19RPSysLytResAccessorPCc=0x80196a38
     draw__11RPSysLayoutFv=0x80195dcc
@@ -64,24 +68,51 @@
     sInstance__16RPSysQueuedScene=0x804bf4f8
 #IRPSysHostIOSocket
     __ct__18IRPSysHostIOSocketFv=0x801907d4
+#RPSportsMainScene
+    __vt__17RPSportsMainScene=0x803c2dc8
+    __dt__17RPSportsMainSceneFv=0x801f6e50
+    UserDraw__17RPSportsMainSceneFv=0x801f6a74
+    Exit__17RPSportsMainSceneFv=0x801f6a40
+    Configure__17RPSportsMainSceneFv=0x801f6ce4
+    Calculate__17RPSportsMainSceneFv=0x801f6ad4
+    Reset__17RPSportsMainSceneFv=0x801f6b6c
+    LoadResource__17RPSportsMainSceneFv=0x801f6bec
 #RPSysNunchukScene
     __vt__17RPSysNunchukScene=0x803c2338
 #RPSysPlayerSelectScene
     __vt__22RPSysPlayerSelectScene=0x803c1fd8
     __dt__22RPSysPlayerSelectSceneFv=0x801d5744
+    UserDraw__22RPSysPlayerSelectSceneFv=0x801d45ac
+    Exit__22RPSysPlayerSelectSceneFv=0x801d4560
+    Configure__22RPSysPlayerSelectSceneFv=0x801d53ec
+    Calculate__22RPSysPlayerSelectSceneFv=0x801d46a0
+    Reset__22RPSysPlayerSelectSceneFv=0x801d4c28
+    LoadResource__22RPSysPlayerSelectSceneFv=0x801d5210
+#RPSportsPhysicalPreviewScene
+    __vt__28RPSportsPhysicalPreviewScene=0x803c28b0
+    __dt__28RPSportsPhysicalPreviewSceneFv=0x801ee2e8
+    UserDraw__28RPSportsPhysicalPreviewSceneFv=0x801ed7ec
+    Exit__28RPSportsPhysicalPreviewSceneFv=0x801ed7d8
+    Configure__28RPSportsPhysicalPreviewSceneFv=0x801ee18c
+    Calculate__28RPSportsPhysicalPreviewSceneFv=0x801ed84c
+    Reset__28RPSportsPhysicalPreviewSceneFv=0x801ed9dc
+    LoadResource__28RPSportsPhysicalPreviewSceneFv=0x801ee0c8
 #RPSysBootScene
     __vt__14RPSysBootScene=0x803c1f78
 #RPGrpScreen
     __vt__11RPGrpScreen=0x803b9894
 #RPGrpModelManager
     sInstance__17RPGrpModelManager=0x804bf5f8
-    CreateResourceList__17RPGrpModelManagerFUs=0x801aef8c
+    CreateModelScene__17RPGrpModelManagerFUlUcUlP17RPGrpLightManagerP15RPGrpFogManager=0x801ae1b4
 #RPGrpModelResManager
     sInstance__20RPGrpModelResManager=0x804bf600
-    CreateModelScene__20RPGrpModelResManagerFUlUcUlP17RPGrpLightManagerP15RPGrpFogManager=0x801aef8c
+    CreateResourceList__20RPGrpModelResManagerFUs=0x801aef8c
 #RPSndAudioMgr
     sInstance__13RPSndAudioMgr=0x804bf644
     setSystemSeFadeInFrame__13RPSndAudioMgrFs=0x801b73d4
+    startSound__13RPSndAudioMgrFPQ34nw4r3snd11SoundHandlePCc=0x801b6ff0
+    startSound__13RPSndAudioMgrFPQ34nw4r3snd11SoundHandleUl=0x801b709c
+    attachArchive__13RPSndAudioMgrFPCcbPQ34nw4r3snd9SoundHeap=0x801b7c28
 #RPUtlRandom
     sSeed__11RPUtlRandom=0x804bf688
 #RPSportsBaseScene
@@ -104,7 +135,7 @@
     sInstance__19RPSportsSequenceMgr=0x804bf708
 #RPSportsMenuBGModel
     __ct__19RPSportsMenuBGModelFUcUcUc=0x801d5bb0
-    LoadResource__19RPSportsMenuBGModelFPQ23EGG7Archive=0x801d5210
+    LoadResource__19RPSportsMenuBGModelFPQ23EGG7Archive=0x801d59b8
     Reset__19RPSportsMenuBGModelFv=0x801d5888
     Calculate__19RPSportsMenuBGModelFv=0x801d57e4
 #RPSportsTrainingResult

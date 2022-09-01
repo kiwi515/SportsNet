@@ -1,17 +1,17 @@
-#ifndef RP_SYSTEM_PLAYER_SELECT_SCENE_H
-#define RP_SYSTEM_PLAYER_SELECT_SCENE_H
+#ifndef RP_SPORTS_MAIN_SCENE_H
+#define RP_SPORTS_MAIN_SCENE_H
 #include "RPSysScene.h"
 #include "types_RP.h"
 
 /**
- * @brief Pack Project player select scene
+ * @brief Sports Pack menu scene
  * @note Stub class for SceneCreatorEx
  */
-class RPSysPlayerSelectScene : public RPSysScene {
+class RPSportsMainScene : public RPSysScene {
 public:
-    RPSysPlayerSelectScene() {}
-    //! @address 803c1fe0
-    virtual ~RPSysPlayerSelectScene();
+    RPSportsMainScene() {}
+    //! @address 801f6e50
+    virtual ~RPSportsMainScene();
     virtual void Configure();
     virtual void LoadResource();
     virtual void Reset();

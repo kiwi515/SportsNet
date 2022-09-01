@@ -4,7 +4,7 @@
 
 class RPSportsMenuBGModel {
 public:
-    RPSportsMenuBGModel(u8, u8, u8);
+    RPSportsMenuBGModel(u8 view, u8 lightMgr, u8 color);
     virtual ~RPSportsMenuBGModel();
     void LoadResource(EGG::Archive* cmnArc);
     void Reset();

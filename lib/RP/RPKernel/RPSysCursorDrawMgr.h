@@ -30,12 +30,17 @@ public:
 
 public:
     //! @address 801a0230
-    static void RPSysCursorDrawMgr* CreateInstance(EGG::Heap* heap);
+    static RPSysCursorDrawMgr* CreateInstance(EGG::Heap* heap);
+
+    static RPSysCursorDrawMgr* GetInstance() { return sInstance; }
 
     //! @address 8019ede8
     RPSysCursorDrawMgr(EGG::Heap* heap);
     //! @address 8019ed74
     virtual ~RPSysCursorDrawMgr(); // at 0x8
+
+    void startDpdCheck();
+    void createActiveCursor();
 
 private:
     //! @brief Parent heap
