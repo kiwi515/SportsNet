@@ -18,6 +18,7 @@ struct RPGrpFogManager;
 struct RPGrpModelBoundingInfo;
 struct RPGrpShadowTexture;
 struct RPGrpScreen;
+struct RPGrpLightManager;
 
 // RPKernel
 struct RPSysSystem;
@@ -62,6 +63,9 @@ struct RPSportsCommonData;
 struct RPSportsPlayerData;
 struct RPSportsSequenceMgr;
 struct RPSportsBaseScene;
+struct RPSportsMenuBGModel;
+struct RPSportsMenuLogoModel;
+struct RPSportsTrainingResult;
 struct RPBoxBoxer;
 struct RPBoxBoxerEnergy;
 struct RPBoxBoxerCombo;

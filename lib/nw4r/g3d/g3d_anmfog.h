@@ -4,6 +4,7 @@
 #include "ut_Color.h"
 
 #include <GX/GXPixel.h>
+#include <GX/GXTypes.h>
 
 namespace nw4r {
 namespace g3d {

@@ -122,6 +122,8 @@ public:
      */
     void RemoveFromFileList(RPSysFile* file);
 
+    EGG::Archive* GetStaticLocalArchive() const { return mStaticLocalArc; }
+
 private:
     RPSysResourceManager() {
         nw4r::ut::List_Init(&LIST_0x4, offsetof(RPSysFile, mNode));
@@ -162,13 +164,6 @@ private:
      * @address 804bf4f0
      */
     static RPSysResourceManager* sInstance;
-};
-
-const char* RPSysResourceManager::sPackStaticPaths[4] = {
-    "SportsStatic/", // Wii Sports
-    "PartyStatic/",  // Wii Play
-    "HealthStatic/", // Wii Fit
-    "MusicStatic/"   // Wii Music
 };
 
 #endif

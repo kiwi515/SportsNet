@@ -79,7 +79,7 @@ UNKWORD FindNameResource(ARCHandle* pHandle, const char* name) {
 
     ARCOpenDir(pHandle, ".", &dir);
     while (ARCReadDir(&dir, &entry)) {
-        if (entry.node_type != RX_ARCHIVE_FILE) {
+        if (entry.type != ARC_ENTRY_FILE) {
             ARCChangeDir(pHandle, entry.name);
             resource = FindNameResource(pHandle, name);
             ARCChangeDir(pHandle, "..");
@@ -126,7 +126,7 @@ UNKTYPE* GetResourceSub(ARCHandle* pHandle, const char* rootDir, u32 filetype,
     }
 
     if (entrynum != -1) {
-        ARCFile file;
+        ARCFileInfo file;
 
         ARCFastOpen(pHandle, entrynum, &file);
         void* start = ARCGetStartAddrInMem(&file);

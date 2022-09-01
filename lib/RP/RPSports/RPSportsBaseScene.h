@@ -87,7 +87,7 @@ public:
      */
     virtual void DebugDraw();
 
-private:
+protected:
     //! @brief Current sequence (from sequence mgr)
     u32 mSequence; // at 0x44
     //! @brief Current training game (from sequence mgr)
@@ -119,7 +119,7 @@ private:
     UNKTYPE* PTR_0x78;
     UNKTYPE* mTutorialSkip; // at 0x7C
     UNKTYPE* PTR_0x80;
-    UNKTYPE* PTR_0x84;
+    RPSportsTrainingResult* mTrainingResultLyt; // at 0x84
     UNKTYPE* PTR_0x88;
     UNKTYPE* PTR_0x8C;
     UNKTYPE* PTR_0x90;

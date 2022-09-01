@@ -155,6 +155,10 @@ typedef enum _GXDistAttnFn {
     GX_DIST_ATTN_FN_3
 } GXDistAttnFn;
 
+typedef enum _GXFogType {
+    GX_FOG_TYPE_0,
+} GXFogType;
+
 typedef enum _GXIndTexAlphaSel {
     GX_IND_TEX_ALPHA_SEL_0,
 } GXIndTexAlphaSel;

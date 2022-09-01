@@ -6,6 +6,23 @@
     sRootMem1__11RPSysSystem=0x804a3d68
     sRootMem2__11RPSysSystem=0x804a3d6c
     sSystemHeap__11RPSysSystem=0x804a3d74
+#RPSysResourceManager
+    LoadGameCommonArchive__20RPSysResourceManagerFiPQ23EGG4Heap=0x80187a0c
+    LoadGameLocalArchive__20RPSysResourceManagerFiPQ23EGG4Heap=0x80187964
+    GetFileFromArchive__20RPSysResourceManagerFPQ23EGG7ArchivePCcPUl=0x80187878
+    sInstance__20RPSysResourceManager=0x804bf4f0
+    GetMessageResource__20RPSysResourceManagerFPCc=0x8018783c
+#RPSysLayout
+    create__11RPSysLayoutFPQ23EGG4HeapP19RPSysLytResAccessorPCc=0x80196a38
+    draw__11RPSysLayoutFv=0x80195dcc
+    reset__11RPSysLayoutFv=0x80195f70
+    calc__11RPSysLayoutFv=0x80195e34
+    createAnmObj__11RPSysLayoutFPQ23EGG4HeapP19RPSysLytResAccessorPCc=0x80196848
+#RPSysLytResAccessor
+    create__19RPSysLytResAccessorFPQ23EGG4Heap=0x80198bb8
+    mountArchive__19RPSysLytResAccessorFPvPCc=0x80198b6c
+#RPSysMessage
+    __ct__12RPSysMessageFPCvPQ23EGG4Heap=0x80190dec
 #RPSysScene
     __ct__10RPSysSceneFv=0x80185404
     taskAsync__10RPSysSceneFv=0x8018559c
@@ -21,6 +38,15 @@
     setShowLoadingText__10RPSysSceneFv=0x80186cec
     disableFadeIn__10RPSysSceneFv=0x80184e80
     setCreatorSceneID__10RPSysSceneFi=0x80184e98
+    setSceneFadeColor__10RPSysSceneFQ34nw4r2ut5Color=0x80185484
+    startFadeIn__10RPSysSceneFv=0x8018547c
+    startFadeOut__10RPSysSceneFv=0x80185474
+    isSceneDisplay__10RPSysSceneCFv=0x80185584
+    Exit__10RPSysSceneFv=0x80185004
+    Calculate__10RPSysSceneFv=0x80185164
+    Reset__10RPSysSceneFv=0x80185228
+    LoadResource__10RPSysSceneFv=0x80185598
+    Configure__10RPSysSceneFv=0x80185400
 #RPSysSceneMgr
     sInstance__13RPSysSceneMgr=0x804bf4d8
     getCurrentScene__13RPSysSceneMgrCFv=0x80186100
@@ -42,15 +68,52 @@
     __vt__17RPSysNunchukScene=0x803c2338
 #RPSysPlayerSelectScene
     __vt__22RPSysPlayerSelectScene=0x803c1fd8
+    __dt__22RPSysPlayerSelectSceneFv=0x801d5744
 #RPSysBootScene
     __vt__14RPSysBootScene=0x803c1f78
+#RPGrpScreen
+    __vt__11RPGrpScreen=0x803b9894
+#RPGrpModelManager
+    sInstance__17RPGrpModelManager=0x804bf5f8
+    CreateResourceList__17RPGrpModelManagerFUs=0x801aef8c
+#RPGrpModelResManager
+    sInstance__20RPGrpModelResManager=0x804bf600
+    CreateModelScene__20RPGrpModelResManagerFUlUcUlP17RPGrpLightManagerP15RPGrpFogManager=0x801aef8c
 #RPSndAudioMgr
     sInstance__13RPSndAudioMgr=0x804bf644
     setSystemSeFadeInFrame__13RPSndAudioMgrFs=0x801b73d4
 #RPUtlRandom
     sSeed__11RPUtlRandom=0x804bf688
+#RPSportsBaseScene
+    __vt__17RPSportsBaseScene=0x803c2910
+    DebugDraw__17RPSportsBaseSceneFv=0x801ef0a4
+    OnExit__17RPSportsBaseSceneFv=0x801ef0a0
+    OnDebugDraw__17RPSportsBaseSceneFv=0x801ef0b4
+    OnUserDraw__17RPSportsBaseSceneFv=0x801ef0f8
+    OnCalculate__17RPSportsBaseSceneFv=0x801ef13c
+    OnReset__17RPSportsBaseSceneFv=0x801ef180
+    OnLoadResource__17RPSportsBaseSceneFv=0x801ef1c4
+    OnConfigure__17RPSportsBaseSceneFv=0x801ef20c
+    UserDraw__17RPSportsBaseSceneFv=0x801ef0b8
+    Exit__17RPSportsBaseSceneFv=0x801ef064
+    Calculate__17RPSportsBaseSceneFv=0x801ef0fc
+    Reset__17RPSportsBaseSceneFv=0x801ef140
+    LoadResource__17RPSportsBaseSceneFv=0x801ef184
+    Configure__17RPSportsBaseSceneFv=0x801ef1c8
 #RPSportsSequenceMgr
     sInstance__19RPSportsSequenceMgr=0x804bf708
+#RPSportsMenuBGModel
+    __ct__19RPSportsMenuBGModelFUcUcUc=0x801d5bb0
+    LoadResource__19RPSportsMenuBGModelFPQ23EGG7Archive=0x801d5210
+    Reset__19RPSportsMenuBGModelFv=0x801d5888
+    Calculate__19RPSportsMenuBGModelFv=0x801d57e4
+#RPSportsTrainingResult
+    __ct__22RPSportsTrainingResultFv=0x80201194
+    __dt__22RPSportsTrainingResultFv=0x801ffebc
+    LoadResource__22RPSportsTrainingResultFPQ23EGG7ArchiveP12RPSysMessage=0x80200d38
+    Reset__22RPSportsTrainingResultFv=0x80200a88
+    Calculate__22RPSportsTrainingResultFv=0x80200600
+    UserDraw__22RPSportsTrainingResultFv=0x801ffee0
 #RPGolCollisionModel
     sInstance__19RPGolCollisionModel=0x804bf908
 #RPGolPlayerManager
@@ -64,12 +127,19 @@
 #RPGrpRenderer
     Begin__13RPGrpRendererFv=0x801aff6c
     End__13RPGrpRendererFv=0x801afee0
+    sInstance__13RPGrpRenderer=0x804bf610
+    CreateView2D__13RPGrpRendererFUcP11RPGrpScreen=0x801af58c
+    CorrectView__13RPGrpRendererFv=0x801af454
+    sDrawPass__13RPGrpRenderer=0x804bdc0c
+    D_804BF615__13RPGrpRenderer=0x804bf615
 #RPPrint
     RPPrint__FfffPCcUlb=0x801c38b8
 
 #######
 # EGG #
 #######
+#eggScreen
+    __ct__Q23EGG6ScreenFv=0x8009973c
 #eggHeap
     alloc__Q23EGG4HeapFUliPQ23EGG4Heap=0x800a2e38
     free__Q23EGG4HeapFPvPQ23EGG4Heap=0x800a30a0
@@ -620,6 +690,20 @@
     IPCiProfQueueReq=0x800e5cd8
     IPCiProfAck=0x800e5d58
     IPCiProfReply=0x800e5d68
+#ARC
+    ARCInitHandle=0x80103ad0
+    ARCOpen=0x80103b70
+    ARCFastOpen=0x80103e14
+    ARCConvertPathToEntrynum=0x80103e64
+    entryToPath=0x801040c8
+    ARCGetStartAddrInMem=0x80104290
+    ARCGetStartOffset=0x801042a4
+    ARCGetLength=0x801042ac
+    ARCClose=0x801042b4
+    ARCChangeDir=0x801042bc
+    ARCOpenDir=0x80104314
+    ARCReadDir=0x80104390
+    ARCCloseDir=0x80104448
 
 ###########
 # Runtime #

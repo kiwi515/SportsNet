@@ -4,10 +4,11 @@
 
 #include <egg/gfx/eggScreen.h>
 
-class RPGrpScreen : public EGG::eggScreen {
+class RPGrpScreen : public EGG::Screen {
 public:
-    //! TO-DO: Constructor
-    RPGrpScreen() {}
+    RPGrpScreen() { SetFarZ(10000.0f); }
+
+    virtual ~RPGrpScreen();
 
 private:
 };

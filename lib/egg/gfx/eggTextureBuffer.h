@@ -1,54 +1,72 @@
 #ifndef EGG_GFX_TEXTURE_BUFFER_H
 #define EGG_GFX_TEXTURE_BUFFER_H
-#include "eggCapTexture.h"
 #include "types_egg.h"
-
+#include "eggCapTexture.h"
 #include <GX/GXTexture.h>
 
-namespace EGG {
-class TextureBuffer {
-public:
-    // Unofficial name
-    class BufferNode : public CapTexture {
+namespace EGG
+{
+    class TextureBuffer : public CapTexture
+    {
     public:
-        enum ENodeState { STATE_FREED, STATE_ALLOCED };
+        enum EBufferState
+        {
+            STATE_FREE,
+            STATE_ALLOCED
+        };
 
-        BufferNode();
-        // Unofficial
-        void free();
+        static void initialize(u32, Heap *);
+        static TextureBuffer * getNotJoin();
+        static void alloc(TextureBuffer *, u32);
 
-        virtual ~BufferNode() {}  // at 0x8
+        static TextureBuffer * alloc(u16 w, u16 h, GXTexFmt fmt)
+        {
+            if (w == 0 || h == 0) return NULL;
+
+            TextureBuffer *buf = getNotJoin();
+            buf->setWidth(w);
+            buf->setHeight(h);
+            buf->setFormat(fmt);
+            buf->configure();
+
+            buf->setWrapS(0);
+            buf->setWrapT(0);
+            buf->setMinFilt(1);
+            buf->setMagFilt(1);
+
+            alloc(buf, buf->getTexBufferSize());
+            return buf;
+        }
+
+        static void append(TextureBuffer *buf)
+        {
+            if (spTailNotJoin != NULL) spTailNotJoin->mpNext = buf;
+
+            buf->mpPrev = spTailNotJoin;
+            buf->mpNext = NULL;
+
+            spTailNotJoin = buf;
+        }
+
+        TextureBuffer();
+        virtual ~TextureBuffer() {} // at 0x8
         virtual void configure(); // at 0xC
 
-        UNKWORD mSize;      // at 0x2C
-        ENodeState mState;  // at 0x30
-        BufferNode* mpNext; // at 0x34
-        BufferNode* mpPrev; // at 0x38
+        void free();
+
+    private:
+        u32 mSize; // at 0x2C
+        EBufferState mState; // at 0x30
+        TextureBuffer *mpNext; // at 0x34
+        TextureBuffer *mpPrev; // at 0x38
+
+        static const u32 NUM_BUFFERS = 64;
+        static TextureBuffer *spHead;
+        static TextureBuffer *spTailNotJoin;
+        static TextureBuffer *spBufferAll;
+        static u32 sBufferAllSize;
+        static TextureBuffer spBufferTable[NUM_BUFFERS];
     };
-
-    static void initialize(u32, Heap*);
-    static BufferNode* getNotJoin();
-    static void alloc(BufferNode*, u32);
-
-    // Unofficial
-    static void append(BufferNode* node) {
-        if (spTail != NULL)
-            spTail->mpNext = node;
-
-        node->mpPrev = spTail;
-        node->mpNext = NULL;
-
-        spTail = node;
-    }
-
-private:
-    static const u32 cMaxNodes = 64;
-    static BufferNode* spHead;
-    static BufferNode* spTail;
-    static BufferNode* spBufferAll;
-    static u32 sBufferSize;
-    static BufferNode sBufferNodes[cMaxNodes];
-};
-} // namespace EGG
+}
 
 #endif

@@ -95,16 +95,10 @@ public:
      */
     void setDimming(bool dim);
 
-    /**
-     * @details Bool goes used in WFU, but OGWS just tells the manager
-     * rather than accessing the fader directly
-     */
-    /**@{*/
     //! @address 80185474
-    void startFadeOut(bool);
+    void startFadeOut();
     //! @address 8018547c
-    void startFadeIn(bool);
-    /**@}*/
+    void startFadeIn();
 
     /**
      * @brief Set manager's scene fade color
