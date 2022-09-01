@@ -1,6 +1,7 @@
 #include "SceneCreatorEx.hpp"
 
 #include "LobbyScene.hpp"
+#include "NetSelectScene.hpp"
 
 #include <RPAudio/RPSndAudioMgr.h>
 #include <RPSystem/RPSysBootScene.h>
@@ -86,6 +87,8 @@ RPSysScene* SceneCreatorEx::CreateSportsScene(ESceneIDEx id) {
  */
 RPSysScene* SceneCreatorEx::CreateSportsNetScene(ESceneIDEx id) {
     switch (id) {
+    case SPNET_NET_SELECT_SCENE:
+        return new NetSelectScene();
     case SPNET_LOBBY_SCENE:
         return new LobbyScene();
     default:

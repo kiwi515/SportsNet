@@ -15,20 +15,14 @@ void LobbyScene::OnConfigure() {}
 void LobbyScene::OnLoadResource() {}
 
 void LobbyScene::OnReset() {
-    // Play BGM
+    // Play training BGM
     RPSndAudioMgr::getInstance()->startSound(STRM_Training_Select);
 }
 
 void LobbyScene::OnCalculate() {}
 
-void LobbyScene::OnExit() {
-    ;
-    ;
-}
+void LobbyScene::OnExit() {}
 
-void LobbyScene::OnUserDraw() {
-    ;
-    ;
-}
+void LobbyScene::OnUserDraw() {}
 
 } // namespace spnet
