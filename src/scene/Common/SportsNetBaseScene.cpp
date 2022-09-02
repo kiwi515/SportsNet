@@ -7,6 +7,8 @@
 #include <RPGraphics/RPGrpRenderer.h>
 #include <RPGraphics/RPGrpScreen.h>
 #include <RPKernel/RPSysCursorDrawMgr.h>
+#include <RPUtility/RPPrint.h>
+#include <stdio.h>
 
 namespace spnet {
 
@@ -71,5 +73,26 @@ void SportsNetBaseScene::Calculate() {
 void SportsNetBaseScene::Exit() { OnExit(); }
 
 void SportsNetBaseScene::UserDraw() { OnUserDraw(); }
+
+/**
+ * @brief Print formatted text to the screen
+ *
+ * @param x X position
+ * @param y Y position
+ * @param scale Text scale
+ * @param color Text color
+ * @param fmt Format string
+ * @param ... Format arguments
+ */
+void SportsNetBaseScene::Printf(f32 x, f32 y, f32 scale, bool center,
+                                mato::Color color, const char* fmt, ...) {
+    char msg_buf[0x800];
+    va_list list;
+    va_start(fmt, list);
+    vsnprintf(msg_buf, sizeof(msg_buf), fmt, list);
+    va_end(list);
+
+    RPPrint(x, y, scale, msg_buf, color.argb(), center);
+}
 
 } // namespace spnet

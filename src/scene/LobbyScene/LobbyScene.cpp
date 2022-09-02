@@ -2,7 +2,8 @@
 
 #include <RPAudio/RPSndAudioMgr.h>
 #include <RPAudio/rp_Common_Sports.h>
-#include <RPSports/RPSportsMenuBGModel.h>
+#include <RPGraphics/RPGrpRenderer.h>
+#include <RPSports/RPSportsSequenceMgr.h>
 
 namespace spnet {
 

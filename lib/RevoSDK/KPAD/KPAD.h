@@ -9,6 +9,14 @@ typedef struct {
 
 } KPADStatus;
 
+void KPADSetPosParam(s32 chan, f32, f32);
+void KPADSetHoriParam(s32 chan, f32, f32);
+void KPADSetDistParam(s32 chan, f32, f32);
+void KPADSetAccParam(s32 chan, f32, f32);
+
+s32 KPADRead(s32 chan, UNKTYPE*, UNKWORD);
+void KPADInit(void);
+
 #ifdef __cplusplus
 }
 #endif

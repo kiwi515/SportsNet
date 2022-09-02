@@ -6,6 +6,9 @@
     sRootMem1__11RPSysSystem=0x804a3d68
     sRootMem2__11RPSysSystem=0x804a3d6c
     sSystemHeap__11RPSysSystem=0x804a3d74
+#RPSysSystemWinMgr
+    sInstance__17RPSysSystemWinMgr=0x804bf5a0
+    setSystemWindow__17RPSysSystemWinMgrFQ217RPSysSystemWinMgr13E_WINDOW_TYPEUlP12RPSysMessageie=0x801a40bc
 #RPSysResourceManager
     LoadGameCommonArchive__20RPSysResourceManagerFiPQ23EGG4Heap=0x80187a0c
     LoadGameLocalArchive__20RPSysResourceManagerFiPQ23EGG4Heap=0x80187964

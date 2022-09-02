@@ -2,6 +2,7 @@
 #define SPORTSNET_COMMON_BASE_SCENE_H
 
 #include <RPSystem/RPSysScene.h>
+#include <mato/core/matoColor.hpp>
 
 namespace spnet {
 
@@ -22,6 +23,9 @@ public:
     virtual void OnCalculate();
     virtual void OnExit();
     virtual void OnUserDraw();
+
+    static void Printf(f32 x, f32 y, f32 scale, bool center, mato::Color color,
+                       const char* fmt, ...);
 
 private:
     //! Base scene functionality

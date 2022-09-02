@@ -20,6 +20,10 @@ public:
     virtual void OnCalculate();
     virtual void OnExit();
     virtual void OnUserDraw();
+
+private:
+    //! @brief Network BMG
+    RPSysMessage* mNetworkMsg;
 };
 
 } // namespace spnet
