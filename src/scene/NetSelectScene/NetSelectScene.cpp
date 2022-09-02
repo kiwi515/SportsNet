@@ -31,7 +31,7 @@ void NetSelectScene::OnCalculate() {
     switch (RPSysSystemWinMgr::getInstance()->getResult()) {
     case RPSysSystemWinMgr::RESULT_NONE:
         RPSysSystemWinMgr::getInstance()->setSystemWindow(
-            RPSysSystemWinMgr::WINDOW_TYPE_0, ASK_NET_SELECT, mNetworkMsg, 0);
+            RPSysSystemWinMgr::WINDOW_TYPE_MSG, ASK_NET_SELECT, mNetworkMsg, 0);
         return;
     case RPSysSystemWinMgr::RESULT_WAIT:
         return;

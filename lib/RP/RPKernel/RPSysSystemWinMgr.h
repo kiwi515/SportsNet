@@ -5,8 +5,8 @@
 class RPSysSystemWinMgr {
 public:
     enum E_WINDOW_TYPE {
-        WINDOW_TYPE_0,
-        WINDOW_TYPE_1,
+        WINDOW_TYPE_MSG,
+        WINDOW_TYPE_ERR,
     };
 
     enum E_RESULT { RESULT_NONE, RESULT_WAIT, RESULT_YES, RESULT_NO };
