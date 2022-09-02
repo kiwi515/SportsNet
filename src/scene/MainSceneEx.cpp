@@ -2,12 +2,27 @@
 
 #include "SceneCreatorEx.hpp"
 
+#include <RPSystem/RPSysQueuedScene.h>
+
 namespace spnet {
 
 /**
  * @brief Sport selection callback
  */
 void MainSceneEx::OnSportSelect() {
+    // Queued menu scene
+    const SceneCreatorEx::ESceneIDEx next =
+        static_cast<SceneCreatorEx::ESceneIDEx>(
+            RPSysQueuedScene::GetInstance()->GetSceneID());
+
+    // Training mode/Wii Fitness not supported yet
+    if (next == SceneCreatorEx::RP_TRAIN_MENU_SCENE ||
+        next == SceneCreatorEx::RP_PHYSICAL_MENU_SCENE) {
+        SceneCreatorEx::GetInstance().ChangeSceneAfterFade(
+            SceneCreatorEx::RP_PLAYER_SELECT_SCENE, false);
+    }
+
+    // Change to network select scene
     SceneCreatorEx::GetInstance().ChangeSceneAfterFade(
         SceneCreatorEx::SPNET_NET_SELECT_SCENE, false);
 }

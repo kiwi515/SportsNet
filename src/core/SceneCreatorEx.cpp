@@ -165,6 +165,11 @@ kmBranchMF(0x80184690, SceneCreatorEx, GetSceneID);
  * @param scene Scene ID
  */
 SceneCreatorEx::ESportID SceneCreatorEx::GetSportID(ESceneIDEx scene) const {
+    if (scene < 0) {
+        scene = static_cast<ESceneIDEx>(
+            RPSysSceneMgr::getInstance()->getCurrentSceneID());
+    }
+
     switch (scene) {
     case RP_BSB_SCENE:
         return SPORT_BASEBALL;
