@@ -1,29 +1,44 @@
 #include "LobbyScene.hpp"
 
+#include "LobbyWindow.hpp"
+#include "Lobby_sound.h"
+
 #include <RPAudio/RPSndAudioMgr.h>
-#include <RPAudio/rp_Common_Sports.h>
-#include <RPGraphics/RPGrpRenderer.h>
-#include <RPSports/RPSportsSequenceMgr.h>
 
 namespace spnet {
 
-LobbyScene::LobbyScene() {}
+LobbyScene::LobbyScene() : mWindow(NULL) {}
 
 LobbyScene::~LobbyScene() {}
 
-void LobbyScene::OnConfigure() {}
+void LobbyScene::OnConfigure() {
+    mWindow = new LobbyWindow();
 
-void LobbyScene::OnLoadResource() {}
-
-void LobbyScene::OnReset() {
-    // Play training BGM
-    RPSndAudioMgr::getInstance()->startSound(STRM_Training_Select);
+    // Prepare audio manager for new archive
+    RPSndAudioMgr::getInstance()->changeScene();
 }
 
-void LobbyScene::OnCalculate() {}
+void LobbyScene::OnLoadResource() {
+    // Load sound archive
+    MATO_ASSERT(RPSndAudioMgr::getInstance()->attachArchive("Lobby_sound.brsar",
+                                                            false, NULL));
+    MATO_ASSERT(RPSndAudioMgr::getInstance()->loadGroup(0, NULL, 0));
+
+    // Load window assets
+    mWindow->LoadResource();
+}
+
+void LobbyScene::OnReset() {
+    // Start BGM
+    RPSndAudioMgr::getInstance()->startSound(BGM_Lobby);
+
+    mWindow->Reset();
+}
+
+void LobbyScene::OnCalculate() { mWindow->Calculate(); }
 
 void LobbyScene::OnExit() {}
 
-void LobbyScene::OnUserDraw() {}
+void LobbyScene::OnUserDraw() { mWindow->UserDraw(); }
 
 } // namespace spnet

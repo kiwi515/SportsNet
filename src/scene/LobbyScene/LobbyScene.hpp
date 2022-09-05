@@ -7,6 +7,8 @@
 
 namespace spnet {
 
+class LobbyWindow;
+
 /**
  * @brief Online multiplayer lobby scene
  */
@@ -20,6 +22,9 @@ public:
     virtual void OnCalculate();
     virtual void OnExit();
     virtual void OnUserDraw();
+
+private:
+    LobbyWindow* mWindow;
 };
 
 } // namespace spnet

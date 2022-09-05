@@ -42,6 +42,8 @@ public:
     void startDpdCheck();
     void createActiveCursor();
 
+    const EGG::Vector2f& getActiveCursorPos();
+
 private:
     //! @brief Parent heap
     EGG::Heap* mHeap; // at 0x4

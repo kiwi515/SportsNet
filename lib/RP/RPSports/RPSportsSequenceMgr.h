@@ -32,6 +32,7 @@ public:
     static RPSportsSequenceMgr* GetInstance() { return sInstance; }
 
     u32 GetSport() const { return (u32)mSport; }
+    void SetSequence(u32 seq) { mSequence = seq; }
     u32 GetSequence() const { return mSequence; }
 
     /**

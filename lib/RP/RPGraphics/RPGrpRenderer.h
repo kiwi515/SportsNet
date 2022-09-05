@@ -5,6 +5,9 @@
 //! TODO
 class RPGrpRenderer {
 public:
+    enum EDrawPass { DRAWPASS_LYT = 5 };
+
+public:
     static void Begin();
     static void End();
 
@@ -16,6 +19,8 @@ public:
     void CorrectView();
 
     IRPGrpDrawObject* GetDrawObjectList() const { return mDrawObjects; }
+
+    static EDrawPass GetDrawPass() { return (EDrawPass)sDrawPass; }
     static void SetDrawPass(s32 pass) { sDrawPass = pass; }
 
 public:

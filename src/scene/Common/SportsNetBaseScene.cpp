@@ -51,6 +51,7 @@ void SportsNetBaseScene::Configure() {
 
 void SportsNetBaseScene::LoadResource() {
     mMenuBGModel->LoadResource();
+
     OnLoadResource();
 }
 

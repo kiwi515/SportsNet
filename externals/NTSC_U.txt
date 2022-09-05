@@ -19,6 +19,7 @@
     sInstance__18RPSysCursorDrawMgr=0x804bf598
     startDpdCheck__18RPSysCursorDrawMgrFv=0x801a00fc
     createActiveCursor__18RPSysCursorDrawMgrFv=0x8019ff0c
+    getActiveCursorPos__18RPSysCursorDrawMgrFv=0x8019fe6c
 #RPSysLayout
     create__11RPSysLayoutFPQ23EGG4HeapP19RPSysLytResAccessorPCc=0x80196a38
     draw__11RPSysLayoutFv=0x80195dcc
@@ -116,6 +117,8 @@
     startSound__13RPSndAudioMgrFPQ34nw4r3snd11SoundHandlePCc=0x801b6ff0
     startSound__13RPSndAudioMgrFPQ34nw4r3snd11SoundHandleUl=0x801b709c
     attachArchive__13RPSndAudioMgrFPCcbPQ34nw4r3snd9SoundHeap=0x801b7c28
+    loadGroup__13RPSndAudioMgrFiPQ34nw4r3snd9SoundHeapi=0x801b6c80
+    changeScene__13RPSndAudioMgrFv=0x801b71a0
 #RPUtlRandom
     sSeed__11RPUtlRandom=0x804bf688
 #RPSportsBaseScene
@@ -148,6 +151,16 @@
     Reset__22RPSportsTrainingResultFv=0x80200a88
     Calculate__22RPSportsTrainingResultFv=0x80200600
     UserDraw__22RPSportsTrainingResultFv=0x801ffee0
+#RPSportsLytButton
+    __ct__17RPSportsLytButtonFRCQ217RPSportsLytButton3Arg=0x801f17d4
+#RPSportsLytCursorBase
+    __ct__21RPSportsLytCursorBaseFv=0x801f1cf0
+    Bind__21RPSportsLytCursorBaseFP17RPSportsLytButton=0x801f1cb0
+    LoadCursorResource__21RPSportsLytCursorBaseFPQ23EGG7Archive=0x801f1cdc
+    UserDraw__21RPSportsLytCursorBaseFv=0x801f18e8
+    VF_0x8__21RPSportsLytCursorBaseFv=0x801f1c28
+    Calculate__21RPSportsLytCursorBaseFRCQ23EGG8Vector2fb=0x801f18fc
+    Reset__21RPSportsLytCursorBaseFv=0x801f1c2c
 #RPGolCollisionModel
     sInstance__19RPGolCollisionModel=0x804bf908
 #RPGolPlayerManager

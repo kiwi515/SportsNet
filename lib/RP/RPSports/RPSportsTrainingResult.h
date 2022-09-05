@@ -14,7 +14,7 @@ public:
 
 public:
     char UNK_0x4[0x6C - 0x4];
-    u16 mFlags; // at 0x6C
+    u32 mFlags; // at 0x6C
     char UNK_0x6E[0x88 - 0x6E];
 };
 

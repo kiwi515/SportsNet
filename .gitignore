@@ -6,6 +6,7 @@ tools/*
 romfs/
 riivo/spnet/
 distro/
+assets/
 
 *.carc
 *.dol

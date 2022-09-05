@@ -26,6 +26,7 @@ template <typename T> struct Math;
 struct Matrix34f;
 struct Quatf;
 struct Vector3f;
+struct Vector2f;
 
 template <typename T> struct TBitFlag;
 

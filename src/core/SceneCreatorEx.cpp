@@ -298,7 +298,7 @@ const SceneCreatorEx::SceneAttributes
     {RP_GOL_SELECT_SCENE,       RP_SPORTS_PACK,  1, false, 0, false, "RPGolScene/",           "ゴルフコースセレクト"},
     // SportsNet scenes
     {SPNET_NET_SELECT_SCENE,    RP_SPORTS_PACK,  1, false, 2, true,  "NetSelectScene/",       "Network Select Scene"},
-    {SPNET_LOBBY_SCENE,         RP_SPORTS_PACK,  1, false, 2, true,  "LobbyScene/",           "Lobby Scene"}
+    {SPNET_LOBBY_SCENE,         RP_SPORTS_PACK,  1, false, 2, false, "LobbyScene/",           "Lobby Scene"}
         // clang-format on
 };
 

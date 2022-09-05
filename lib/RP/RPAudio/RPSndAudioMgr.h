@@ -10,6 +10,8 @@ class RPSndAudioMgr {
 public:
     static RPSndAudioMgr* getInstance() { return sInstance; }
 
+    /* virtual */ bool loadGroup(UNKWORD, nw4r::snd::SoundHeap*, UNKWORD);
+
     void setSystemSeFadeInFrame(s16 frame);
 
     bool startSound(u32 id) { return startSound(&mSndHandle, id); }
@@ -20,9 +22,7 @@ public:
     bool startSound(nw4r::snd::SoundHandle* handle, u32 id);
     bool startSound(nw4r::snd::SoundHandle* handle, const char* name);
 
-    void doSomethingAndCloseArchive();
-    bool loadGroup(UNKWORD, UNKWORD, UNKWORD);
-    void stopAllSound();
+    void changeScene();
 
 private:
     char UNK_0x0[0x928];

@@ -67,6 +67,8 @@ struct RPSportsMenuBGModel;
 struct RPSportsMenuLogoModel;
 struct RPSportsTrainingResult;
 struct RPSportsPhysicalPreviewScene;
+struct RPSportsLytButton;
+struct RPSportsLytCursorBase;
 struct RPBoxBoxer;
 struct RPBoxBoxerEnergy;
 struct RPBoxBoxerCombo;
@@ -95,5 +97,6 @@ struct RPPartyPlayerData;
 struct RPUtlMapData;
 struct RPUtlMapObject;
 struct RPUtlDohGraphSun;
+struct RPUtlLytFrameCursor;
 
 #endif
