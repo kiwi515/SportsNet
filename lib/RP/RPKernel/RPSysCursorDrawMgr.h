@@ -43,6 +43,7 @@ public:
     void createActiveCursor();
 
     const EGG::Vector2f& getActiveCursorPos();
+    s32 getActivePlayer();
 
 private:
     //! @brief Parent heap

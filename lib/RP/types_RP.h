@@ -57,6 +57,8 @@ struct RPSysDvdStatus;
 struct RPSysSaveDataMgr;
 struct RPSysFontManager;
 struct RPSysSaveData;
+struct RPSysLytMenuCommon;
+struct RPSysLytBackButton;
 
 // RPSports
 struct RPSportsCommonData;
@@ -98,5 +100,6 @@ struct RPUtlMapData;
 struct RPUtlMapObject;
 struct RPUtlDohGraphSun;
 struct RPUtlLytFrameCursor;
+struct RPUtlLytBase;
 
 #endif

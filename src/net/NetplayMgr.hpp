@@ -23,6 +23,8 @@ public:
     bool IsServer() const { return mIsServer; }
     bool IsClient() const { return !mIsServer; }
 
+    void Exit();
+
     const char* GetPlayerName(u32 player);
     void SetPlayerName(u32 player, const char* name);
 

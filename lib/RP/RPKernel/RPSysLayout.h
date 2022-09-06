@@ -327,6 +327,8 @@ public:
      */
     static void initialize();
 
+    nw4r::lyt::Pane* getRootPane() { return findPane("RootPane"); }
+
 private:
     u16 mFlags; // at 0x0
     f32 FLOAT_0x4;

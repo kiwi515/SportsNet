@@ -2,6 +2,8 @@
 
 #include "LobbyWindow.hpp"
 #include "Lobby_sound.h"
+#include "NetplayMgr.hpp"
+#include "SceneCreatorEx.hpp"
 
 #include <RPAudio/RPSndAudioMgr.h>
 
@@ -24,7 +26,7 @@ void LobbyScene::OnLoadResource() {
                                                             false, NULL));
     MATO_ASSERT(RPSndAudioMgr::getInstance()->loadGroup(0, NULL, 0));
 
-    // Load window assets
+    // Load layout assets
     mWindow->LoadResource();
 }
 
@@ -37,7 +39,13 @@ void LobbyScene::OnReset() {
 
 void LobbyScene::OnCalculate() { mWindow->Calculate(); }
 
-void LobbyScene::OnExit() {}
+void LobbyScene::OnExit() {
+    // Reset netplay settings
+    NetplayMgr::GetInstance().Exit();
+
+    // Prepare audio manager for new archive
+    RPSndAudioMgr::getInstance()->changeScene();
+}
 
 void LobbyScene::OnUserDraw() { mWindow->UserDraw(); }
 

@@ -20,12 +20,18 @@
     startDpdCheck__18RPSysCursorDrawMgrFv=0x801a00fc
     createActiveCursor__18RPSysCursorDrawMgrFv=0x8019ff0c
     getActiveCursorPos__18RPSysCursorDrawMgrFv=0x8019fe6c
+    getActivePlayer__18RPSysCursorDrawMgrFv=0x8019fe0c
 #RPSysLayout
     create__11RPSysLayoutFPQ23EGG4HeapP19RPSysLytResAccessorPCc=0x80196a38
     draw__11RPSysLayoutFv=0x80195dcc
     reset__11RPSysLayoutFv=0x80195f70
     calc__11RPSysLayoutFv=0x80195e34
     createAnmObj__11RPSysLayoutFPQ23EGG4HeapP19RPSysLytResAccessorPCc=0x80196848
+    findTextBox__11RPSysLayoutFPCc=0x80196280
+    unbindAllAnmObj__11RPSysLayoutFv=0x80196804
+    bindAnmObjToPane__11RPSysLayoutFP14RPSysLytAnmObjPCcb=0x80196790
+#RPSysLytTextBox
+    setMessage__15RPSysLytTextBoxFP12RPSysMessageUlUlie=0x80199148
 #RPSysLytResAccessor
     create__19RPSysLytResAccessorFPQ23EGG4Heap=0x80198bb8
     mountArchive__19RPSysLytResAccessorFPvPCc=0x80198b6c
@@ -103,6 +109,13 @@
     LoadResource__28RPSportsPhysicalPreviewSceneFv=0x801ee0c8
 #RPSysBootScene
     __vt__14RPSysBootScene=0x803c1f78
+#RPSysLytMenuCommon
+    __ct__18RPSysLytMenuCommonFl=0x801d8654
+#RPSysLytBackButton
+    __ct__18RPSysLytBackButtonFl=0x801d13bc
+    IsState2__18RPSysLytBackButtonCFv=0x801d0e44
+    StartState1__18RPSysLytBackButtonFv=0x801d0d78
+    StartState5__18RPSysLytBackButtonFv=0x801d0d24
 #RPGrpScreen
     __vt__11RPGrpScreen=0x803b9894
 #RPGrpModelManager
