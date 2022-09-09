@@ -49,6 +49,7 @@ RPSysScene* SceneCreatorEx::Create(ESceneIDEx id) {
     }
 
     scene->setCreatorSceneID(getLastSceneID());
+    return scene;
 }
 kmBranchMF(0x80184838, SceneCreatorEx, Create);
 

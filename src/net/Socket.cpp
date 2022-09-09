@@ -589,9 +589,6 @@ s32 Socket::RecieveFromImpl(void* buf, size_t len, u32* ip, u16* port) {
     // Free memory
     delete data;
     delete from;
-    for (int i = 0; i < V_MAX; i++) {
-        delete vectors[i].base;
-    }
     delete[] vectors;
 
     return result;
@@ -653,9 +650,6 @@ s32 Socket::SendToImpl(const void* buf, size_t len, u32* ip, u16* port) {
 
     // Free memory
     delete data;
-    for (int i = 0; i < V_MAX; i++) {
-        delete vectors[i].base;
-    }
     delete[] vectors;
 
     return result;
