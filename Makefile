@@ -4,10 +4,16 @@
 # Config                                                                      #
 #=============================================================================#
 
+# Verbose output for debugging (optional)
+VERBOSE ?= 0
+ifeq (${VERBOSE}, 0)
+	QUIET = @
+endif
+
 # TO-DO: Actually support literally any other region/version
-REGION ?= us
-VERSION ?= rev1
-DEBUG ?= 0
+REGION ?= NTSC_U
+VERSION ?= REV1
+NDEBUG ?= 0
 LOADER_MEM ?= 0x80001900
 
 #==============================================================================#
@@ -19,6 +25,7 @@ ASSETS_DIR := assets
 BUILD_DIR := build
 EXTERNALS_DIR := externals
 ROMFS_DIR := romfs
+MODULES_DIR := modules
 
 # Code
 INCLUDE_DIR := include
@@ -31,7 +38,7 @@ TOOLS_DIR := tools
 
 # All directories to be included
 INCLUDE_DIRS := \
-	${shell find ${INCLUDE_DIR} ${LIB_DIR} ${LOADER_DIR} ${SRC_DIR} type -d}
+	${shell find ${INCLUDE_DIR} ${LIB_DIR} ${LOADER_DIR} ${SRC_DIR} -type d}
 
 #==============================================================================#
 # Sources                                                                      #
@@ -56,8 +63,8 @@ BASEROM := ${EXTERNALS_DIR}/baserom_${REGION}.dol
 DOL := ${BUILD_DIR}/main_${REGION}.dol
 
 # Kamek loader & SportsNet main module
-LOADER := ${BUILD_DIR}/modules/Loader_${REGION}.bin
-MODULE := ${BUILD_DIR}/modules/SportsNet_${REGION}.bin
+LOADER := ${BUILD_DIR}/${LOADER_DIR}/Loader_${REGION}.bin
+MODULE := ${BUILD_DIR}/${MODULES_DIR}/SportsNet_${REGION}.bin
 
 #==============================================================================#
 # Tools                                                                        #
@@ -78,9 +85,9 @@ PYTHON := python
 ASFLAGS := -mgekko
 
 # C/C++ compiler flags
-CPPFLAGS := -proc gekko -i . -I- ${addprefix -ir,${INCLUDE_DIRS}} \
+CPPFLAGS := -proc gekko -i . -I- ${addprefix -ir ,${INCLUDE_DIRS}} \
 	-Cpp_exceptions off -enum int -O4,s -use_lmw_stmw on -fp hard -rostr \
-	-sdata 0 -sdata2 0 -msgstyle gcc -DSPNET_REGION_{REGION}
+	-sdata 0 -sdata2 0 -msgstyle gcc -DSPNET_REGION_${REGION}
 CFLAGS := CPPFLAGS
 
 # Kamek (static loader) flags
@@ -92,7 +99,7 @@ MODULE_FLAGS := -output-kamek=${MODULE} -output-map=${MODULE:.bin=.map} \
 	-externals=${EXTERNALS_DIR}/${REGION}.txt
 
 # Debug flags
-ifeq (${DEBUG}, 0)
+ifeq (${NDEBUG},1)
 	CPPFLAGS += -DNDEBUG
 	CFLAGS += -DNDEBUG
 endif
@@ -101,7 +108,7 @@ endif
 # Default Targets                                                              #
 #==============================================================================#
 
-all: ${DOL} ${MODULE}
+all: ${DOL} ${MODULE} assets
 default: all
 
 #==============================================================================#
@@ -110,21 +117,23 @@ default: all
 
 .PHONY: clean
 clean:
-	rm -fdr build
+	${QUIET} rm -fdr build
 
 #==============================================================================#
 # Link Loader & DOL                                                            #
 #==============================================================================#
 
 ${DOL} ${LOADER}: ${LOADER_OBJ_FILES}
-	${KAMEK} ${LOADER_OBJ_FILES} ${LOADER_FLAGS}
+	${QUIET} mkdir -p ${dir $@}
+	${QUIET} ${KAMEK} ${LOADER_OBJ_FILES} ${LOADER_FLAGS}
 
 #==============================================================================#
 # Link Module                                                                  #
 #==============================================================================#
 
 ${MODULE}: ${MODULE_OBJ_FILES}
-	${KAMEK} ${MODULE_OBJ_FILES} ${MODULE_FLAGS}
+	${QUIET} mkdir -p ${dir $@}
+	${QUIET} ${KAMEK} ${MODULE_OBJ_FILES} ${MODULE_FLAGS}
 
 #==============================================================================#
 # Build Assets                                                                 #
@@ -132,19 +141,24 @@ ${MODULE}: ${MODULE_OBJ_FILES}
 
 .PHONY: assets
 assets:
+	${info Assets not yet supported.}
 
 #==============================================================================#
 # Compile Source Files                                                         #
 #==============================================================================#
 
-${BUILD_DIR}/%.o: %.c:
-	${CC} ${CFLAGS} -c -o $@ $<
+${BUILD_DIR}/%.c.o: %.c
+	${QUIET} mkdir -p ${dir $@}
+	${QUIET} ${CC} ${CFLAGS} -c -o $@ $<
 
-${BUILD_DIR}/%.o: %.cpp:
-	${CC} ${CPPFLAGS} -c -o $@ $<
+${BUILD_DIR}/%.cpp.o: %.cpp
+	${QUIET} mkdir -p ${dir $@}
+	${QUIET} ${CC} ${CPPFLAGS} -c -o $@ $<
 
-${BUILD_DIR}/%.o: %.cxx:
-	${CC} ${CPPFLAGS} -c -o $@ $<
+${BUILD_DIR}/%.cc.o: %.cc
+	${QUIET} mkdir -p ${dir $@}
+	${QUIET} ${CC} ${CPPFLAGS} -c -o $@ $<
 
-${BUILD_DIR}/%.o: %.cc:
-	${CC} ${CPPFLAGS} -c -o $@ $<
+${BUILD_DIR}/%.cxx.o: %.cxx
+	${QUIET} mkdir -p ${dir $@}
+	${QUIET} ${CC} ${CPPFLAGS} -c -o $@ $<
