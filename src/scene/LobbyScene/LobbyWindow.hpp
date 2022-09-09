@@ -6,6 +6,8 @@
 
 namespace spnet {
 
+class LobbySlot;
+
 /**
  * @brief Main window/layout for lobby
  */
@@ -19,7 +21,10 @@ public:
     void UserDraw();
 
 private:
+    static const u32 scMaxPlayers = 4;
+
     RPSysLayout* mLayout;
+    LobbySlot* mSlots[scMaxPlayers];
     RPSportsLytButton* mSettingsBtn;
     RPSportsLytButton* mStartBtn;
 };

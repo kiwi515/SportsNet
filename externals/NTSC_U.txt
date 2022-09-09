@@ -30,8 +30,17 @@
     findTextBox__11RPSysLayoutFPCc=0x80196280
     unbindAllAnmObj__11RPSysLayoutFv=0x80196804
     bindAnmObjToPane__11RPSysLayoutFP14RPSysLytAnmObjPCcb=0x80196790
+    findWindow__11RPSysLayoutFPCc=0x80196120
+    findPicture__11RPSysLayoutFPCc=0x801961d0
+    findPane__11RPSysLayoutFPCc=0x80196330
+    drawKokeshiIcon__11RPSysLayoutFP11RPGrpScreenPQ34nw4r3lyt4PaneP16RPSysKokeshiIcon=0x80195ae4
 #RPSysLytTextBox
     setMessage__15RPSysLytTextBoxFP12RPSysMessageUlUlie=0x80199148
+    setText__15RPSysLytTextBoxFPCwie=0x8019931c
+#RPSysLytWindow
+    applyPlayerColor__14RPSysLytWindowFUlb=0x801a5a98
+#RPSysLytPicture
+    applyPlayerColor__15RPSysLytPictureFUl=0x8019a714
 #RPSysLytResAccessor
     create__19RPSysLytResAccessorFPQ23EGG4Heap=0x80198bb8
     mountArchive__19RPSysLytResAccessorFPvPCc=0x80198b6c
@@ -192,6 +201,7 @@
     CorrectView__13RPGrpRendererFv=0x801af454
     sDrawPass__13RPGrpRenderer=0x804bdc0c
     D_804BF615__13RPGrpRenderer=0x804bf615
+    sActiveScreen__13RPGrpRenderer=0x804bf61c
 #RPPrint
     RPPrint__FfffPCcUlb=0x801c38b8
 

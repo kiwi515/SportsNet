@@ -23,15 +23,18 @@ public:
     static EDrawPass GetDrawPass() { return (EDrawPass)sDrawPass; }
     static void SetDrawPass(s32 pass) { sDrawPass = pass; }
 
+    static RPGrpScreen* GetActiveScreen() { return sActiveScreen; }
+
 public:
-    static s32 sDrawPass;
     static u8 D_804BF615;
 
 private:
     char UNK_0x0[0xC];
     IRPGrpDrawObject* mDrawObjects; // at 0xC
 
+    static s32 sDrawPass;
     static RPGrpRenderer* sInstance;
+    static RPGrpScreen* sActiveScreen;
 };
 
 #endif

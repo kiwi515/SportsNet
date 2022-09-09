@@ -41,7 +41,7 @@ void LobbyScene::OnCalculate() { mWindow->Calculate(); }
 
 void LobbyScene::OnExit() {
     // Reset netplay settings
-    NetplayMgr::GetInstance().Exit();
+    NetplayMgr::GetInstance().Reset();
 
     // Prepare audio manager for new archive
     RPSndAudioMgr::getInstance()->changeScene();

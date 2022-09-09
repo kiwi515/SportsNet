@@ -1,7 +1,6 @@
 #include "NetplayMgr.hpp"
 
 #include <TRK/__mem.h>
-#include <string.h>
 
 namespace spnet {
 
@@ -13,33 +12,26 @@ void NetplayMgr::CreateInstance() {
 
 void NetplayMgr::DestroyInstance() { delete sInstance; }
 
-NetplayMgr::NetplayMgr() : mIsOnlinePlay(false), mIsServer(false) {
-    ;
-    ;
-}
+NetplayMgr::NetplayMgr() { Reset(); }
 
 NetplayMgr::NetplayMgr(const NetplayMgr& other) { MATO_ASSERT(false); }
 
-NetplayMgr::~NetplayMgr() {
-    ;
-    ;
-}
+NetplayMgr::~NetplayMgr() { Reset(); }
 
 /**
  * @brief Reset netplay settings (for exiting/changing scene)
  */
-void NetplayMgr::Exit() {
+void NetplayMgr::Reset() {
     mIsOnlinePlay = false;
     mIsServer = false;
+    mNumPlayers = 1;
     memset(mPlayerNames, 0, sizeof(mPlayerNames));
+    for (int i = 0; i < scMaxPlayers; i++) {
+        delete mPlayerIcons[i];
+        mPlayerIcons[i] = NULL;
+    }
 }
 
-const char* NetplayMgr::GetPlayerName(u32 player) {
-    return mPlayerNames[player];
-}
-
-void NetplayMgr::SetPlayerName(u32 player, const char* name) {
-    strncpy(mPlayerNames[player], name, scPlayerNameLength);
-}
+NetplayMgr* NetplayMgr::sInstance = NULL;
 
 } // namespace spnet

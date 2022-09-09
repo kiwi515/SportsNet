@@ -10,8 +10,6 @@
 
 namespace spnet {
 
-NetplayMgr* NetplayMgr::sInstance = NULL;
-
 /**
  * @brief Dispatch the correct scene when the Nunchuk check is successful
  */

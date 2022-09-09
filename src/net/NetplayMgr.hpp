@@ -2,6 +2,9 @@
 #define SPORTSNET_NET_NETPLAY_MGR_H
 #include "types.h"
 
+#include <RP/types_RP.h>
+#include <wstring.h>
+
 namespace spnet {
 
 /**
@@ -17,16 +20,27 @@ public:
         return *sInstance;
     }
 
+    u32 GetNumPlayers() const { return mNumPlayers; }
+
+    const wchar_t* GetPlayerName(u32 player) { return mPlayerNames[player]; }
+    void SetPlayerName(u32 player, const wchar_t* name) {
+        wcsncpy(mPlayerNames[player], name, scPlayerNameLength);
+    }
+
+    RPSysKokeshiIcon* GetKokeshiIcon(u32 player) {
+        return mPlayerIcons[player];
+    }
+    void SetKokeshiIcon(u32 player, RPSysKokeshiIcon* icon) {
+        mPlayerIcons[player] = icon;
+    }
+
     bool IsOnlinePlay() const { return mIsOnlinePlay; }
     void SetOnlinePlay(bool online) { mIsOnlinePlay = online; }
 
     bool IsServer() const { return mIsServer; }
     bool IsClient() const { return !mIsServer; }
 
-    void Exit();
-
-    const char* GetPlayerName(u32 player);
-    void SetPlayerName(u32 player, const char* name);
+    void Reset();
 
 private:
     NetplayMgr();
@@ -41,8 +55,12 @@ private:
     bool mIsOnlinePlay;
     //! Whether the console is the room server
     bool mIsServer;
-    //! Mii names of other players in the room
-    char mPlayerNames[scPlayerNameLength][scMaxPlayers];
+    //! Room player count
+    u32 mNumPlayers;
+    //! Mii names of players in room
+    wchar_t mPlayerNames[scPlayerNameLength][scMaxPlayers];
+    //! Mii icons of players in room
+    RPSysKokeshiIcon* mPlayerIcons[scMaxPlayers];
 
     static NetplayMgr* sInstance;
 };
