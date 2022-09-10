@@ -46,10 +46,14 @@ void Socket::Initialize() {
  * @returns Error message
  */
 const char* Socket::GetErrorString(s32 error) {
+    if (error > 0) {
+        return "SUCCESS";
+    }
+
     u32 index = (error < 0) ? -error : error;
 
     if (index > ERROR_MAX) {
-        return "SUCCESS";
+        return "UNKNOWN";
     }
 
     static const char* sErrorsStr[] = {
