@@ -111,7 +111,7 @@ ASFLAGS := -mgekko
 # C/C++ compiler flags
 CMNFLAGS := -proc gekko -i . -I- $(addprefix -ir ,$(INCLUDE_DIRS)) \
 	-Cpp_exceptions off -enum int -O4,s -use_lmw_stmw on -fp hard -rostr \
-	-sdata 0 -sdata2 0 -DSPNET_REGION_$(REGION)
+	-RTTI off -sdata 0 -sdata2 0 -DSPNET_REGION_$(REGION)
 CFLAGS := -lang C99 $(CMNFLAGS)
 CPPFLAGS := -lang C++ $(CMNFLAGS) 
 
