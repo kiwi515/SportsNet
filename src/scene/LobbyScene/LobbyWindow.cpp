@@ -123,6 +123,11 @@ void LobbyWindow::UserDraw() {
     }
 }
 
+/**
+ * @brief Update player slot with info from netplay manager
+ *
+ * @param player Player slot ID
+ */
 void LobbyWindow::UpdatePlayer(u32 player) { mSlots[player]->UpdatePlayer(); }
 
 } // namespace spnet

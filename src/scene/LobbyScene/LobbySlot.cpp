@@ -62,22 +62,26 @@ void LobbySlot::LoadResource() {
         RPSysLytPicture* picture = mLayout->findPicture(pictureNames[i]);
         MATO_ASSERT_EX(picture != NULL, "Could not find picture: %s",
                        pictureNames[i]);
-        // I know this looks bad, but SetVisible wasn't working
         picture->SetTranslate(nw4r::math::VEC2(10000.0f, 10000.0f));
     }
 }
 
-void LobbySlot::Reset() { mLayout->reset(); }
+void LobbySlot::Reset() {
+    MATO_ASSERT(mLayout != NULL);
+    mLayout->reset();
+
+    SetName(L"");
+    SetKokeshiIcon(NULL);
+}
 
 void LobbySlot::Calculate() {
+    MATO_ASSERT(mLayout != NULL);
     mLayout->calc();
-
-    // TO-DO: Make this into a callback or something,
-    // so it doesn't have to run every frame
-    SetName(NetplayMgr::GetInstance().GetPlayerName(mPlayer));
 }
 
 void LobbySlot::UserDraw() {
+    MATO_ASSERT(mLayout != NULL);
+
     if (RPGrpRenderer::GetDrawPass() == RPGrpRenderer::DRAWPASS_LYT &&
         RPGrpRenderer::D_804BF615 == 1) {
         // Draw main window
@@ -104,7 +108,7 @@ void LobbySlot::UpdatePlayer() {
 }
 
 /**
- * @brief Update player slot name
+ * @brief Set player slot name
  *
  * @param name Widechar name string
  */
@@ -130,7 +134,7 @@ void LobbySlot::SetName(const wchar_t* name) {
 }
 
 /**
- * @brief Update player Mii icon
+ * @brief Set player slot Mii icon
  */
 void LobbySlot::SetKokeshiIcon(RPSysKokeshiIcon* icon) { mIcon = icon; }
 
