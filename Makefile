@@ -30,6 +30,7 @@ endif
 
 # Data
 ASSETS_DIR := assets
+ROMFS_ASSETS_DIR := $(ROMFS_DIR)/$(REGION)/files
 BUILD_DIR := build
 EXTERNALS_DIR := externals
 ROMFS_DIR := romfs
@@ -62,6 +63,13 @@ MODULE_SRC_FILES := $(shell find $(SRC_DIR) $(LIB_DIR) -name '*.c' -or \
 	-name '*.cpp' -or -name '*.cc' -or -name '*.cxx')
 MODULE_OBJ_FILES := $(MODULE_SRC_FILES:%=$(BUILD_DIR)/%.o)
 
+# (Extracted) asset folders
+EXTRACTED_ASSETS := $(shell find $(ASSETS_DIR) -type d -name '*.d')
+# Toplevel (assumed to be CARC) assets
+TOPLEVEL_ASSETS := $(foreach asset, $(EXTRACTED_ASSETS), \
+	$(if $(findstring .d, $(dir $(asset))),, $(asset)) \
+)
+
 #==============================================================================#
 # Targets                                                                      #
 #==============================================================================#
@@ -77,6 +85,10 @@ MODULE := $(BUILD_DIR)/$(MODULES_DIR)/SportsNet_$(REGION).bin
 # Kamek loader & SportsNet main module in rom filesystem
 ROMFS_DOL := $(ROMFS_DIR)/$(REGION)/sys/main.dol
 ROMFS_MODULE := $(ROMFS_DIR)/$(REGION)/files/$(MODULES_DIR)/SportsNet_$(REGION).bin
+
+# Destination paths of assets
+ASSET_TARGETS := $(patsubst $(ASSETS_DIR)/%, $(ROMFS_ASSETS_DIR)/%, $(TOPLEVEL_ASSETS))
+ASSET_TARGETS := $(ASSET_TARGETS:.d=.carc)
 
 #==============================================================================#
 # Tools                                                                        #
@@ -167,12 +179,15 @@ $(MODULE): $(MODULE_OBJ_FILES)
 #==============================================================================#
 
 .PHONY: assets
-assets:
+assets: $(ASSET_TARGETS)
 	$(info )
 	$(info #========================================#)
 	$(info # Building assets...                     #)
-	$(info # Assets not yet supported.              #)
 	$(info #========================================#)
+
+$(ROMFS_ASSETS_DIR)/%.carc: $(ASSETS_DIR)/%.d
+	$(info $@)
+	wszst CREATE $< --DEST $@
 
 #==============================================================================#
 # Compile Source Files                                                         #
