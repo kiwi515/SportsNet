@@ -59,6 +59,9 @@ struct RPSysFontManager;
 struct RPSysSaveData;
 struct RPSysLytMenuCommon;
 struct RPSysLytBackButton;
+struct RPSysKokeshiGenInfo;
+struct RPSysKokeshiLocation;
+struct RPSysKokeshiOverloadInfo;
 
 // RPSports
 struct RPSportsCommonData;

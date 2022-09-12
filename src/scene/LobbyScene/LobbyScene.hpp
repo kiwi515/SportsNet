@@ -23,6 +23,9 @@ public:
     virtual void OnExit();
     virtual void OnUserDraw();
 
+    static void OnPlayerConnect(void* arg, u32 player);
+    static void OnPlayerDisconnect(void* arg, u32 player);
+
 private:
     LobbyWindow* mWindow;
 };

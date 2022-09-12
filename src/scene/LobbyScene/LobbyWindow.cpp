@@ -1,5 +1,7 @@
 #include "LobbyWindow.hpp"
 
+#include "LobbySlot.hpp"
+
 #include <RPAudio/RPSndAudioMgr.h>
 #include <RPGraphics/RPGrpRenderer.h>
 #include <RPKernel/RPSysCursorDrawMgr.h>
@@ -11,9 +13,21 @@
 namespace spnet {
 
 LobbyWindow::LobbyWindow()
-    : mLayout(NULL), mSettingsBtn(NULL), mStartBtn(NULL) {}
+    : mLayout(NULL), mSettingsBtn(NULL), mStartBtn(NULL) {
+    for (int i = 0; i < scMaxPlayers; i++) {
+        mSlots[i] = new LobbySlot(i);
+        MATO_ASSERT(mSlots[i] != NULL);
+    }
+}
 
-LobbyWindow::~LobbyWindow() {}
+LobbyWindow::~LobbyWindow() {
+    delete mLayout;
+    delete mSettingsBtn;
+    delete mStartBtn;
+    for (int i = 0; i < scMaxPlayers; i++) {
+        delete mSlots[i];
+    }
+}
 
 void LobbyWindow::LoadResource() {
     // Load layout resources
@@ -65,10 +79,19 @@ void LobbyWindow::LoadResource() {
     // Load frame cursor resources
     LoadCursorResource(
         RPSysResourceManager::GetInstance()->GetStaticLocalArchive());
+
+    // Create player slots
+    for (int i = 0; i < scMaxPlayers; i++) {
+        mSlots[i]->LoadResource();
+    }
 }
 
 void LobbyWindow::Reset() {
     mLayout->reset();
+
+    for (int i = 0; i < scMaxPlayers; i++) {
+        mSlots[i]->Reset();
+    }
 
     // Initialize buttons and cursor
     RPSportsLytCursorBase::Reset();
@@ -76,6 +99,10 @@ void LobbyWindow::Reset() {
 
 void LobbyWindow::Calculate() {
     mLayout->calc();
+
+    for (int i = 0; i < scMaxPlayers; i++) {
+        mSlots[i]->Calculate();
+    }
 
     // Update buttons using cursor position
     const EGG::Vector2f& pos =
@@ -90,6 +117,17 @@ void LobbyWindow::UserDraw() {
         mLayout->draw();
         RPSportsLytCursorBase::UserDraw();
     }
+
+    for (int i = 0; i < scMaxPlayers; i++) {
+        mSlots[i]->UserDraw();
+    }
 }
+
+/**
+ * @brief Update player slot with info from netplay manager
+ *
+ * @param player Player slot ID
+ */
+void LobbyWindow::UpdatePlayer(u32 player) { mSlots[player]->UpdatePlayer(); }
 
 } // namespace spnet

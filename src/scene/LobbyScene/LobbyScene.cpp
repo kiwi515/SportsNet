@@ -41,12 +41,36 @@ void LobbyScene::OnCalculate() { mWindow->Calculate(); }
 
 void LobbyScene::OnExit() {
     // Reset netplay settings
-    NetplayMgr::GetInstance().Exit();
+    NetplayMgr::GetInstance().Reset();
 
     // Prepare audio manager for new archive
     RPSndAudioMgr::getInstance()->changeScene();
 }
 
 void LobbyScene::OnUserDraw() { mWindow->UserDraw(); }
+
+/**
+ * @brief Lobby player connect callback
+ *
+ * @param arg Lobby scene
+ * @param player Player slot ID
+ */
+void LobbyScene::OnPlayerConnect(void* arg, u32 player) {
+    MATO_ASSERT(arg != NULL);
+    LobbyScene* thisx = static_cast<LobbyScene*>(arg);
+    thisx->mWindow->UpdatePlayer(player);
+}
+
+/**
+ * @brief Lobby player disconnect callback
+ *
+ * @param arg Lobby scene
+ * @param player Player slot ID
+ */
+void LobbyScene::OnPlayerDisconnect(void* arg, u32 player) {
+    MATO_ASSERT(arg != NULL);
+    LobbyScene* thisx = static_cast<LobbyScene*>(arg);
+    thisx->mWindow->UpdatePlayer(player);
+}
 
 } // namespace spnet

@@ -18,8 +18,8 @@
 //! @brief Create dummy function to call a member function
 #define kmInjectMF(cls, func)                                                  \
     static UNKWORD KM_HOOK_MF_##cls##_##func(void* arg, ...) {                 \
-        typedef UNKWORD (cls::*##cls##_fun_t)(...);                            \
-        const cls##_fun_t mem_fun = (cls##_fun_t)(cls::func);                  \
+        typedef UNKWORD (cls::*cls##_fun_t)(...);                              \
+        const cls##_fun_t mem_fun = (cls##_fun_t)(&cls::func);                 \
         cls* self = reinterpret_cast<cls*>(arg);                               \
         return (self->*mem_fun)();                                             \
     }

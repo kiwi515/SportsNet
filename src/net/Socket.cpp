@@ -46,10 +46,14 @@ void Socket::Initialize() {
  * @returns Error message
  */
 const char* Socket::GetErrorString(s32 error) {
+    if (error > 0) {
+        return "SUCCESS";
+    }
+
     u32 index = (error < 0) ? -error : error;
 
     if (index > ERROR_MAX) {
-        return "SUCCESS";
+        return "UNKNOWN";
     }
 
     static const char* sErrorsStr[] = {
@@ -589,9 +593,6 @@ s32 Socket::RecieveFromImpl(void* buf, size_t len, u32* ip, u16* port) {
     // Free memory
     delete data;
     delete from;
-    for (int i = 0; i < V_MAX; i++) {
-        delete vectors[i].base;
-    }
     delete[] vectors;
 
     return result;
@@ -653,9 +654,6 @@ s32 Socket::SendToImpl(const void* buf, size_t len, u32* ip, u16* port) {
 
     // Free memory
     delete data;
-    for (int i = 0; i < V_MAX; i++) {
-        delete vectors[i].base;
-    }
     delete[] vectors;
 
     return result;

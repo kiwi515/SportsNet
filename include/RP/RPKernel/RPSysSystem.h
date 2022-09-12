@@ -1,6 +1,6 @@
 #ifndef RP_KERNEL_SYSTEM_H
 #define RP_KERNEL_SYSTEM_H
-#include "types_rp.h"
+#include "types_RP.h"
 
 #include <GX/GXFrameBuf.h>
 #include <OS/OSMutex.h>

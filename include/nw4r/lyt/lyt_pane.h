@@ -85,6 +85,23 @@ struct Pane : detail::PaneBase {
 
     inline bool IsVisible() { return ut::TestBit<u8>(mFlags, VISIBLE); }
 
+    void SetTranslate(const math::VEC2& trans) {
+        mTranslate = math::VEC3(trans.mCoords.x, trans.mCoords.y, 0.0f);
+    }
+
+    void SetTranslate(const math::VEC3& trans) {
+        mTranslate =
+            math::VEC3(trans.mCoords.x, trans.mCoords.y, trans.mCoords.z);
+    }
+
+    void SetVisible(bool vis) {
+        if (vis) {
+            mFlags |= 0x1;
+        } else {
+            mFlags &= ~0x1;
+        }
+    }
+
     Pane(const res::Pane*);
     virtual ~Pane(); // at 0x8
     virtual const ut::detail::RuntimeTypeInfo*
@@ -116,10 +133,9 @@ struct Pane : detail::PaneBase {
     UNKTYPE AddAnimationLink(AnimationLink*);
     UNKTYPE GetVtxPos() const;
 
-    ut::LinkListNode mNode;                // at 0x4
     Pane* mParent;                         // at 0x8
     ut::LinkList<Pane, 4> mChildren;       // at 0x14
-    ut::LinkList<AnimationLink, 0> mAnims; // at 0x20;
+    ut::LinkList<AnimationLink, 0> mAnims; // at 0x20
     Material* mMaterial;                   // at 0x2C
     math::VEC3 mTranslate;                 // at 0x30
     math::VEC3 VEC3_0x3C;
