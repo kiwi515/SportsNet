@@ -25,7 +25,12 @@ void NetplayMgr::Reset() {
     mIsOnlinePlay = false;
     mIsServer = false;
     mNumPlayers = 1;
+
+    mOnConnect = NULL;
+    mOnDisconnect = NULL;
+
     memset(mPlayerNames, 0, sizeof(mPlayerNames));
+
     for (int i = 0; i < scMaxPlayers; i++) {
         delete mPlayerIcons[i];
         mPlayerIcons[i] = NULL;

@@ -19,15 +19,21 @@ public:
     void Calculate();
     void UserDraw();
 
+    void UpdatePlayer();
+
     void SetName(const wchar_t* name);
-    // void SetPlayerHead();
+    void SetKokeshiIcon(RPSysKokeshiIcon* icon);
 
 private:
     static const u32 scMaxPlayers = 4;
     static const u32 scPlayerNameLength = 10;
 
+    //! Player slot ID
     u32 mPlayer;
+    //! Player slot layout
     RPSysLayout* mLayout;
+    //! Player Mii icon (non-owning)
+    RPSysKokeshiIcon* mIcon;
 
     static const nw4r::math::VEC2 sSlotRootTrans[scMaxPlayers];
 };

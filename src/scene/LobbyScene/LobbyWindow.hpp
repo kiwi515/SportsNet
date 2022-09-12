@@ -20,6 +20,8 @@ public:
     void Calculate();
     void UserDraw();
 
+    void UpdatePlayer(u32 player);
+
 private:
     static const u32 scMaxPlayers = 4;
 

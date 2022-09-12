@@ -49,4 +49,14 @@ void LobbyScene::OnExit() {
 
 void LobbyScene::OnUserDraw() { mWindow->UserDraw(); }
 
+void LobbyScene::OnPlayerConnect(void* arg, u32 player) {
+    LobbyScene* thisx = static_cast<LobbyScene*>(arg);
+    thisx->mWindow->UpdatePlayer(player);
+}
+
+void LobbyScene::OnPlayerDisconnect(void* arg, u32 player) {
+    LobbyScene* thisx = static_cast<LobbyScene*>(arg);
+    thisx->mWindow->UpdatePlayer(player);
+}
+
 } // namespace spnet

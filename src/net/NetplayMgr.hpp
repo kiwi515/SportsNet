@@ -12,6 +12,9 @@ namespace spnet {
  */
 class NetplayMgr {
 public:
+    typedef void (*PlayerStateCallback)(void* arg, u32 player);
+
+public:
     static void CreateInstance();
     static void DestroyInstance();
 
@@ -38,7 +41,15 @@ public:
     void SetOnlinePlay(bool online) { mIsOnlinePlay = online; }
 
     bool IsServer() const { return mIsServer; }
-    bool IsClient() const { return !mIsServer; }
+    bool IsClient() const { return !IsServer(); }
+
+    void SetPlayerConnectCallback(PlayerStateCallback callback) {
+        mOnConnect = callback;
+    }
+
+    void SetPlayerDisconnectCallback(PlayerStateCallback callback) {
+        mOnDisconnect = callback;
+    }
 
     void Reset();
 
@@ -61,6 +72,11 @@ private:
     wchar_t mPlayerNames[scPlayerNameLength][scMaxPlayers];
     //! Mii icons of players in room
     RPSysKokeshiIcon* mPlayerIcons[scMaxPlayers];
+
+    //! Player connect callback
+    PlayerStateCallback mOnConnect;
+    //! Player disconnect callback
+    PlayerStateCallback mOnDisconnect;
 
     static NetplayMgr* sInstance;
 };
