@@ -14,8 +14,9 @@
 
 namespace spnet {
 
-LobbySlot::LobbySlot(u32 player) : mPlayer(player), mLayout(NULL) {
+LobbySlot::LobbySlot(u32 player) : mPlayer(player), mLayout(NULL), mIcon(NULL) {
     MATO_ASSERT(mPlayer < scMaxPlayers);
+    SetName(L"");
 }
 
 LobbySlot::~LobbySlot() { delete mLayout; }
@@ -86,12 +87,20 @@ void LobbySlot::UserDraw() {
         // Draw Mii head
         nw4r::lyt::Pane* N_faceNull_00 = mLayout->findPane("N_faceNull_00");
         MATO_ASSERT(N_faceNull_00 != NULL);
-        RPSysKokeshiIcon* icon =
-            NetplayMgr::GetInstance().GetKokeshiIcon(mPlayer);
-        if (icon != NULL) {
+        if (mIcon != NULL) {
             mLayout->drawKokeshiIcon(RPGrpRenderer::GetActiveScreen(),
-                                     N_faceNull_00, icon);
+                                     N_faceNull_00, mIcon);
         }
+    }
+}
+
+/**
+ * @brief Update player name/Mii from netplay manager
+ */
+void LobbySlot::UpdatePlayer() {
+    if (mPlayer < NetplayMgr::GetInstance().GetNumPlayers()) {
+        SetName(NetplayMgr::GetInstance().GetPlayerName(mPlayer));
+        SetKokeshiIcon(NetplayMgr::GetInstance().GetKokeshiIcon(mPlayer));
     }
 }
 
@@ -120,6 +129,11 @@ void LobbySlot::SetName(const wchar_t* name) {
 
     T_name_00->setText(name, 0);
 }
+
+/**
+ * @brief Update player Mii icon
+ */
+void LobbySlot::SetKokeshiIcon(RPSysKokeshiIcon* icon) { mIcon = icon; }
 
 const nw4r::math::VEC2 LobbySlot::sSlotRootTrans[LobbySlot::scMaxPlayers] = {
     nw4r::math::VEC2(12.0f, 117.0f), nw4r::math::VEC2(12.0f, 50.0f),

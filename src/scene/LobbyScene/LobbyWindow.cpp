@@ -123,4 +123,6 @@ void LobbyWindow::UserDraw() {
     }
 }
 
+void LobbyWindow::UpdatePlayer(u32 player) { mSlots[player]->UpdatePlayer(); }
+
 } // namespace spnet

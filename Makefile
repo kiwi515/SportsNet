@@ -34,6 +34,7 @@ BUILD_DIR := build
 EXTERNALS_DIR := externals
 ROMFS_DIR := romfs
 MODULES_DIR := modules
+ROMFS_ASSETS_DIR := $(ROMFS_DIR)/$(REGION)/files
 
 # Code
 INCLUDE_DIR := include
@@ -62,6 +63,13 @@ MODULE_SRC_FILES := $(shell find $(SRC_DIR) $(LIB_DIR) -name '*.c' -or \
 	-name '*.cpp' -or -name '*.cc' -or -name '*.cxx')
 MODULE_OBJ_FILES := $(MODULE_SRC_FILES:%=$(BUILD_DIR)/%.o)
 
+# (Extracted) asset folders
+EXTRACTED_ASSETS := $(shell find $(ASSETS_DIR) -type d -name '*.d')
+# Toplevel (assumed to be CARC) assets
+TOPLEVEL_ASSETS := $(foreach asset, $(EXTRACTED_ASSETS), \
+	$(if $(findstring .d, $(dir $(asset))),, $(asset)) \
+)
+
 #==============================================================================#
 # Targets                                                                      #
 #==============================================================================#
@@ -77,6 +85,10 @@ MODULE := $(BUILD_DIR)/$(MODULES_DIR)/SportsNet_$(REGION).bin
 # Kamek loader & SportsNet main module in rom filesystem
 ROMFS_DOL := $(ROMFS_DIR)/$(REGION)/sys/main.dol
 ROMFS_MODULE := $(ROMFS_DIR)/$(REGION)/files/$(MODULES_DIR)/SportsNet_$(REGION).bin
+
+# Destination paths of assets
+ASSET_TARGETS := $(patsubst $(ASSETS_DIR)/%, $(ROMFS_ASSETS_DIR)/%, $(TOPLEVEL_ASSETS))
+ASSET_TARGETS := $(ASSET_TARGETS:.d=.carc)
 
 #==============================================================================#
 # Tools                                                                        #
@@ -99,7 +111,7 @@ ASFLAGS := -mgekko
 # C/C++ compiler flags
 CMNFLAGS := -proc gekko -i . -I- $(addprefix -ir ,$(INCLUDE_DIRS)) \
 	-Cpp_exceptions off -enum int -O4,s -use_lmw_stmw on -fp hard -rostr \
-	-sdata 0 -sdata2 0 -DSPNET_REGION_$(REGION)
+	-RTTI off -sdata 0 -sdata2 0 -DSPNET_REGION_$(REGION)
 CFLAGS := -lang C99 $(CMNFLAGS)
 CPPFLAGS := -lang C++ $(CMNFLAGS) 
 
@@ -122,11 +134,7 @@ endif
 #==============================================================================#
 
 default: all
-all: $(DOL) $(MODULE) assets
-	$(info )
-	$(info #========================================#)
-	$(info # Build OK                               #)
-	$(info #========================================#)
+all: $(DOL) $(MODULE) $(ASSET_TARGETS)
 
 #==============================================================================#
 # Clean                                                                        #
@@ -134,17 +142,18 @@ all: $(DOL) $(MODULE) assets
 
 .PHONY: clean
 clean:
+# Remove build artifacts
 	$(QUIET) rm -fdr build
+# Remove built assets
+	$(foreach asset, $(ASSET_TARGETS), \
+		$(QUIET) rm -f $(asset) \
+	)
 
 #==============================================================================#
 # Link Loader & DOL                                                            #
 #==============================================================================#
 
 $(DOL) $(LOADER): $(LOADER_OBJ_FILES)
-	$(info )
-	$(info #========================================#)
-	$(info # Linking DOL...                         #)
-	$(info #========================================#)
 	$(QUIET) mkdir -p $(dir $@)
 	$(QUIET) $(KAMEK) $(LOADER_OBJ_FILES) $(LOADER_FLAGS)
 	$(QUIET) cp -u $(DOL) $(ROMFS_DOL)
@@ -154,10 +163,6 @@ $(DOL) $(LOADER): $(LOADER_OBJ_FILES)
 #==============================================================================#
 
 $(MODULE): $(MODULE_OBJ_FILES)
-	$(info )
-	$(info #========================================#)
-	$(info # Linking module...                      #)
-	$(info #========================================#)
 	$(QUIET) mkdir -p $(dir $@)
 	$(QUIET) $(KAMEK) $(MODULE_OBJ_FILES) $(MODULE_FLAGS)
 	$(QUIET) cp -u $(MODULE) $(ROMFS_MODULE)
@@ -166,13 +171,8 @@ $(MODULE): $(MODULE_OBJ_FILES)
 # Build Assets                                                                 #
 #==============================================================================#
 
-.PHONY: assets
-assets:
-	$(info )
-	$(info #========================================#)
-	$(info # Building assets...                     #)
-	$(info # Assets not yet supported.              #)
-	$(info #========================================#)
+$(ROMFS_ASSETS_DIR)/%.carc: $(ASSETS_DIR)/%.d
+	wszst CREATE $< --DEST $@
 
 #==============================================================================#
 # Compile Source Files                                                         #
