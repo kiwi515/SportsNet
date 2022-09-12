@@ -30,11 +30,11 @@ endif
 
 # Data
 ASSETS_DIR := assets
-ROMFS_ASSETS_DIR := $(ROMFS_DIR)/$(REGION)/files
 BUILD_DIR := build
 EXTERNALS_DIR := externals
 ROMFS_DIR := romfs
 MODULES_DIR := modules
+ROMFS_ASSETS_DIR := $(ROMFS_DIR)/$(REGION)/files
 
 # Code
 INCLUDE_DIR := include
@@ -134,11 +134,7 @@ endif
 #==============================================================================#
 
 default: all
-all: $(DOL) $(MODULE) assets
-	$(info )
-	$(info #========================================#)
-	$(info # Build OK                               #)
-	$(info #========================================#)
+all: $(DOL) $(MODULE) $(ASSET_TARGETS)
 
 #==============================================================================#
 # Clean                                                                        #
@@ -146,17 +142,18 @@ all: $(DOL) $(MODULE) assets
 
 .PHONY: clean
 clean:
+# Remove build artifacts
 	$(QUIET) rm -fdr build
+# Remove built assets
+	$(foreach asset, $(ASSET_TARGETS), \
+		$(QUIET) rm -f $(asset) \
+	)
 
 #==============================================================================#
 # Link Loader & DOL                                                            #
 #==============================================================================#
 
 $(DOL) $(LOADER): $(LOADER_OBJ_FILES)
-	$(info )
-	$(info #========================================#)
-	$(info # Linking DOL...                         #)
-	$(info #========================================#)
 	$(QUIET) mkdir -p $(dir $@)
 	$(QUIET) $(KAMEK) $(LOADER_OBJ_FILES) $(LOADER_FLAGS)
 	$(QUIET) cp -u $(DOL) $(ROMFS_DOL)
@@ -166,10 +163,6 @@ $(DOL) $(LOADER): $(LOADER_OBJ_FILES)
 #==============================================================================#
 
 $(MODULE): $(MODULE_OBJ_FILES)
-	$(info )
-	$(info #========================================#)
-	$(info # Linking module...                      #)
-	$(info #========================================#)
 	$(QUIET) mkdir -p $(dir $@)
 	$(QUIET) $(KAMEK) $(MODULE_OBJ_FILES) $(MODULE_FLAGS)
 	$(QUIET) cp -u $(MODULE) $(ROMFS_MODULE)
@@ -178,15 +171,7 @@ $(MODULE): $(MODULE_OBJ_FILES)
 # Build Assets                                                                 #
 #==============================================================================#
 
-.PHONY: assets
-assets: $(ASSET_TARGETS)
-	$(info )
-	$(info #========================================#)
-	$(info # Building assets...                     #)
-	$(info #========================================#)
-
 $(ROMFS_ASSETS_DIR)/%.carc: $(ASSETS_DIR)/%.d
-	$(info $@)
 	wszst CREATE $< --DEST $@
 
 #==============================================================================#
