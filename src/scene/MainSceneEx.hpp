@@ -10,7 +10,7 @@ namespace spnet {
 
 class MainSceneEx : public RPSportsMainScene {
 public:
-    void OnSportSelect();
+    void Dispatch();
 
 private:
     // MainSceneEx should not be constructed

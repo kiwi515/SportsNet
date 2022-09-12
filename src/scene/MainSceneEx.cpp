@@ -9,7 +9,7 @@ namespace spnet {
 /**
  * @brief Sport selection callback
  */
-void MainSceneEx::OnSportSelect() {
+void MainSceneEx::Dispatch() {
     // Queued menu scene
     const SceneCreatorEx::ESceneIDEx next =
         static_cast<SceneCreatorEx::ESceneIDEx>(
@@ -26,6 +26,6 @@ void MainSceneEx::OnSportSelect() {
     SceneCreatorEx::GetInstance().ChangeSceneAfterFade(
         SceneCreatorEx::SPNET_NET_SELECT_SCENE, false);
 }
-kmCallMF(0x801f6b3c, MainSceneEx, OnSportSelect);
+kmCallMF(0x801f6b3c, MainSceneEx, Dispatch);
 
 } // namespace spnet
