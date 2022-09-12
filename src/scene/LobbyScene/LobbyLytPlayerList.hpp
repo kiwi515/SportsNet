@@ -1,20 +1,20 @@
-#ifndef SPORTSNET_LOBBY_WINDOW_H
-#define SPORTSNET_LOBBY_WINDOW_H
+#ifndef SPORTSNET_LOBBY_LYT_PLAYER_LIST_H
+#define SPORTSNET_LOBBY_LYT_PLAYER_LIST_H
 #include "types.h"
 
 #include <RPSports/RPSportsLytCursorBase.h>
 
 namespace spnet {
 
-class LobbySlot;
+class LobbyLytPlayerSlot;
 
 /**
  * @brief Main window/layout for lobby
  */
-class LobbyWindow : public RPSportsLytCursorBase {
+class LobbyLytPlayerList : public RPSportsLytCursorBase {
 public:
-    LobbyWindow();
-    virtual ~LobbyWindow();
+    LobbyLytPlayerList();
+    virtual ~LobbyLytPlayerList();
     void LoadResource();
     void Reset();
     void Calculate();
@@ -26,7 +26,7 @@ private:
     static const u32 scMaxPlayers = 4;
 
     RPSysLayout* mLayout;
-    LobbySlot* mSlots[scMaxPlayers];
+    LobbyLytPlayerSlot* mSlots[scMaxPlayers];
     RPSportsLytButton* mSettingsBtn;
     RPSportsLytButton* mStartBtn;
 };

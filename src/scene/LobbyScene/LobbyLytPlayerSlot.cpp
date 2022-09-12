@@ -1,5 +1,4 @@
-#include "LobbySlot.hpp"
-
+#include "LobbyLytPlayerSlot.hpp"
 #include "NetplayMgr.hpp"
 
 #include <RPGraphics/RPGrpRenderer.h>
@@ -14,13 +13,14 @@
 
 namespace spnet {
 
-LobbySlot::LobbySlot(u32 player) : mPlayer(player), mLayout(NULL), mIcon(NULL) {
+LobbyLytPlayerSlot::LobbyLytPlayerSlot(u32 player)
+    : mPlayer(player), mLayout(NULL), mIcon(NULL) {
     MATO_ASSERT(mPlayer < scMaxPlayers);
 }
 
-LobbySlot::~LobbySlot() { delete mLayout; }
+LobbyLytPlayerSlot::~LobbyLytPlayerSlot() { delete mLayout; }
 
-void LobbySlot::LoadResource() {
+void LobbyLytPlayerSlot::LoadResource() {
     // Load layout resources
     RPSysLytResAccessor* accessor = RPSysLytResAccessor::create(NULL);
     void* resultArc = RPSysResourceManager::GetFileFromArchive(
@@ -66,7 +66,7 @@ void LobbySlot::LoadResource() {
     }
 }
 
-void LobbySlot::Reset() {
+void LobbyLytPlayerSlot::Reset() {
     MATO_ASSERT(mLayout != NULL);
     mLayout->reset();
 
@@ -74,12 +74,12 @@ void LobbySlot::Reset() {
     SetKokeshiIcon(NULL);
 }
 
-void LobbySlot::Calculate() {
+void LobbyLytPlayerSlot::Calculate() {
     MATO_ASSERT(mLayout != NULL);
     mLayout->calc();
 }
 
-void LobbySlot::UserDraw() {
+void LobbyLytPlayerSlot::UserDraw() {
     MATO_ASSERT(mLayout != NULL);
 
     if (RPGrpRenderer::GetDrawPass() == RPGrpRenderer::DRAWPASS_LYT &&
@@ -100,7 +100,7 @@ void LobbySlot::UserDraw() {
 /**
  * @brief Update player name/Mii from netplay manager
  */
-void LobbySlot::UpdatePlayer() {
+void LobbyLytPlayerSlot::UpdatePlayer() {
     if (mPlayer < NetplayMgr::GetInstance().GetNumPlayers()) {
         SetName(NetplayMgr::GetInstance().GetPlayerName(mPlayer));
         SetKokeshiIcon(NetplayMgr::GetInstance().GetKokeshiIcon(mPlayer));
@@ -112,7 +112,7 @@ void LobbySlot::UpdatePlayer() {
  *
  * @param name Widechar name string
  */
-void LobbySlot::SetName(const wchar_t* name) {
+void LobbyLytPlayerSlot::SetName(const wchar_t* name) {
     MATO_ASSERT(mLayout != NULL);
 
     // Player name text box
@@ -121,7 +121,8 @@ void LobbySlot::SetName(const wchar_t* name) {
 
     // Name is limited to 10 characters
     if (wcslen(name) > scPlayerNameLength) {
-        MATO_LOG_EX("[LobbySlot::SetName] Name too long for buffer: %s", name);
+        MATO_LOG_EX(
+            "[LobbyLytPlayerSlot::SetName] Name too long for buffer: %s", name);
 
         wchar_t buf[scPlayerNameLength + 1];
         wcsncpy(buf, name, sizeof(buf));
@@ -136,10 +137,13 @@ void LobbySlot::SetName(const wchar_t* name) {
 /**
  * @brief Set player slot Mii icon
  */
-void LobbySlot::SetKokeshiIcon(RPSysKokeshiIcon* icon) { mIcon = icon; }
+void LobbyLytPlayerSlot::SetKokeshiIcon(RPSysKokeshiIcon* icon) {
+    mIcon = icon;
+}
 
-const nw4r::math::VEC2 LobbySlot::sSlotRootTrans[LobbySlot::scMaxPlayers] = {
-    nw4r::math::VEC2(12.0f, 117.0f), nw4r::math::VEC2(12.0f, 50.0f),
-    nw4r::math::VEC2(12.0f, -17.0f), nw4r::math::VEC2(12.0f, -84.0f)};
+const nw4r::math::VEC2
+    LobbyLytPlayerSlot::sSlotRootTrans[LobbyLytPlayerSlot::scMaxPlayers] = {
+        nw4r::math::VEC2(12.0f, 117.0f), nw4r::math::VEC2(12.0f, 50.0f),
+        nw4r::math::VEC2(12.0f, -17.0f), nw4r::math::VEC2(12.0f, -84.0f)};
 
 } // namespace spnet

@@ -1,5 +1,5 @@
-#ifndef SPORTSNET_SCENE_LOBBY_SLOT_H
-#define SPORTSNET_SCENE_LOBBY_SLOT_H
+#ifndef SPORTSNET_LOBBY_LYT_PLAYER_SLOT_H
+#define SPORTSNET_LOBBY_LYT_PLAYER_SLOT_H
 #include "types.h"
 
 #include <RP/types_RP.h>
@@ -10,10 +10,10 @@ namespace spnet {
 /**
  * @brief Lobby player slot
  */
-class LobbySlot {
+class LobbyLytPlayerSlot {
 public:
-    LobbySlot(u32 player);
-    ~LobbySlot();
+    LobbyLytPlayerSlot(u32 player);
+    ~LobbyLytPlayerSlot();
     void LoadResource();
     void Reset();
     void Calculate();

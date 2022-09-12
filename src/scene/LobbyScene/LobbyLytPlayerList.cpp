@@ -1,6 +1,6 @@
-#include "LobbyWindow.hpp"
+#include "LobbyLytPlayerList.hpp"
 
-#include "LobbySlot.hpp"
+#include "LobbyLytPlayerSlot.hpp"
 
 #include <RPAudio/RPSndAudioMgr.h>
 #include <RPGraphics/RPGrpRenderer.h>
@@ -12,15 +12,15 @@
 
 namespace spnet {
 
-LobbyWindow::LobbyWindow()
+LobbyLytPlayerList::LobbyLytPlayerList()
     : mLayout(NULL), mSettingsBtn(NULL), mStartBtn(NULL) {
     for (int i = 0; i < scMaxPlayers; i++) {
-        mSlots[i] = new LobbySlot(i);
+        mSlots[i] = new LobbyLytPlayerSlot(i);
         MATO_ASSERT(mSlots[i] != NULL);
     }
 }
 
-LobbyWindow::~LobbyWindow() {
+LobbyLytPlayerList::~LobbyLytPlayerList() {
     delete mLayout;
     delete mSettingsBtn;
     delete mStartBtn;
@@ -29,7 +29,7 @@ LobbyWindow::~LobbyWindow() {
     }
 }
 
-void LobbyWindow::LoadResource() {
+void LobbyLytPlayerList::LoadResource() {
     // Load layout resources
     RPSysLytResAccessor* accessor = RPSysLytResAccessor::create(NULL);
     void* resultArc = RPSysResourceManager::GetFileFromArchive(
@@ -86,7 +86,7 @@ void LobbyWindow::LoadResource() {
     }
 }
 
-void LobbyWindow::Reset() {
+void LobbyLytPlayerList::Reset() {
     mLayout->reset();
 
     for (int i = 0; i < scMaxPlayers; i++) {
@@ -97,7 +97,7 @@ void LobbyWindow::Reset() {
     RPSportsLytCursorBase::Reset();
 }
 
-void LobbyWindow::Calculate() {
+void LobbyLytPlayerList::Calculate() {
     mLayout->calc();
 
     for (int i = 0; i < scMaxPlayers; i++) {
@@ -110,7 +110,7 @@ void LobbyWindow::Calculate() {
     RPSportsLytCursorBase::Calculate(pos, true);
 }
 
-void LobbyWindow::UserDraw() {
+void LobbyLytPlayerList::UserDraw() {
     // Draw layouts with transparency and during the correct draw pass
     if (RPGrpRenderer::GetDrawPass() == RPGrpRenderer::DRAWPASS_LYT &&
         RPGrpRenderer::D_804BF615 == 1) {
@@ -128,6 +128,8 @@ void LobbyWindow::UserDraw() {
  *
  * @param player Player slot ID
  */
-void LobbyWindow::UpdatePlayer(u32 player) { mSlots[player]->UpdatePlayer(); }
+void LobbyLytPlayerList::UpdatePlayer(u32 player) {
+    mSlots[player]->UpdatePlayer();
+}
 
 } // namespace spnet

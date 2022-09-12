@@ -7,7 +7,7 @@
 
 namespace spnet {
 
-class LobbyWindow;
+class LobbyLytPlayerList;
 
 /**
  * @brief Online multiplayer lobby scene
@@ -27,7 +27,7 @@ public:
     static void OnPlayerDisconnect(void* arg, u32 player);
 
 private:
-    LobbyWindow* mWindow;
+    LobbyLytPlayerList* mWindow;
 };
 
 } // namespace spnet

@@ -1,6 +1,6 @@
 #include "LobbyScene.hpp"
 
-#include "LobbyWindow.hpp"
+#include "LobbyLytPlayerList.hpp"
 #include "Lobby_sound.h"
 #include "NetplayMgr.hpp"
 #include "SceneCreatorEx.hpp"
@@ -14,7 +14,7 @@ LobbyScene::LobbyScene() : mWindow(NULL) {}
 LobbyScene::~LobbyScene() {}
 
 void LobbyScene::OnConfigure() {
-    mWindow = new LobbyWindow();
+    mWindow = new LobbyLytPlayerList();
 
     // Prepare audio manager for new archive
     RPSndAudioMgr::getInstance()->changeScene();
