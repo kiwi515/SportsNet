@@ -119,7 +119,7 @@ bool SceneCreatorEx::ChangeSceneAfterFade(ESceneIDEx next, bool reload) {
     }
 
     // Send request to scene manager
-    bool success =
+    const bool success =
         RPSysSceneMgr::getInstance()->changeNextSceneAfterFade(next, reload);
 
     // Fade in system SE if we are switching sound archives?
