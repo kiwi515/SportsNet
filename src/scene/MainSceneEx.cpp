@@ -24,7 +24,7 @@ void MainSceneEx::OnSportSelect() {
 
     // Change to network select scene
     SceneCreatorEx::GetInstance().ChangeSceneAfterFade(
-        SceneCreatorEx::SPNET_LOBBY_SCENE, false);
+        SceneCreatorEx::SPNET_NET_SELECT_SCENE, false);
 }
 kmCallMF(0x801f6b3c, MainSceneEx, OnSportSelect);
 

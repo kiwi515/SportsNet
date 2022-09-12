@@ -66,8 +66,8 @@ MODULE_OBJ_FILES := $(MODULE_SRC_FILES:%=$(BUILD_DIR)/%.o)
 # (Extracted) asset folders
 EXTRACTED_ASSETS := $(shell find $(ASSETS_DIR) -type d -name '*.d')
 # Toplevel (assumed to be CARC) assets
-TOPLEVEL_ASSETS := $(foreach asset, $(EXTRACTED_ASSETS), \
-	$(if $(findstring .d, $(dir $(asset))),, $(asset)) \
+PACKED_ASSET_SRC := $(foreach asset, $(EXTRACTED_ASSETS), \
+	$(if $(findstring .d, $(dir $(asset))),,$(asset)) \
 )
 
 #==============================================================================#
@@ -87,8 +87,19 @@ ROMFS_DOL := $(ROMFS_DIR)/$(REGION)/sys/main.dol
 ROMFS_MODULE := $(ROMFS_DIR)/$(REGION)/files/$(MODULES_DIR)/SportsNet_$(REGION).bin
 
 # Destination paths of assets
-ASSET_TARGETS := $(patsubst $(ASSETS_DIR)/%, $(ROMFS_ASSETS_DIR)/%, $(TOPLEVEL_ASSETS))
-ASSET_TARGETS := $(ASSET_TARGETS:.d=.carc)
+# Convert to ROMFS path
+PACKED_ASSET_DST := $(patsubst $(ASSETS_DIR)/%, $(ROMFS_ASSETS_DIR)/%, \
+	$(PACKED_ASSET_SRC))
+# Convert file extension
+PACKED_ASSET_DST := $(PACKED_ASSET_DST:.d=.carc)
+
+# Non-repackable assets
+COPIED_ASSET_SRC := $(foreach asset, $(shell find $(ASSETS_DIR) -type f), \
+	$(if $(findstring .d, $(dir $(asset))),,$(asset)) \
+)
+# Convert to ROMFS path
+COPIED_ASSET_DST := $(patsubst $(ASSETS_DIR)/%, $(ROMFS_ASSETS_DIR)/%, \
+	$(COPIED_ASSET_SRC))
 
 #==============================================================================#
 # Tools                                                                        #
@@ -134,7 +145,7 @@ endif
 #==============================================================================#
 
 default: all
-all: $(DOL) $(MODULE) $(ASSET_TARGETS)
+all: $(DOL) $(MODULE) assets
 
 #==============================================================================#
 # Clean                                                                        #
@@ -145,7 +156,11 @@ clean:
 # Remove build artifacts
 	$(QUIET) rm -fdr build
 # Remove built assets
-	$(foreach asset, $(ASSET_TARGETS), \
+	$(foreach asset, $(PACKED_ASSET_DST), \
+		$(QUIET) rm -f $(asset) \
+	)
+# Remove copied assets
+	$(foreach asset, $(COPIED_ASSET_DST), \
 		$(QUIET) rm -f $(asset) \
 	)
 
@@ -171,8 +186,18 @@ $(MODULE): $(MODULE_OBJ_FILES)
 # Build Assets                                                                 #
 #==============================================================================#
 
+.PHONY: assets
+assets: $(PACKED_ASSET_DST) $(COPIED_ASSET_DST)
+
+# Pack archive assets using WSZST
 $(ROMFS_ASSETS_DIR)/%.carc: $(ASSETS_DIR)/%.d
-	wszst CREATE $< --DEST $@
+	$(QUIET) mkdir -p $(dir $@)
+	wszst CREATE $< --DEST $@ --rm-dest
+
+# Copy non-repackable assets
+$(ROMFS_ASSETS_DIR)/%: $(ASSETS_DIR)/%
+	$(QUIET) mkdir -p $(dir $@)
+	cp -u $< $@
 
 #==============================================================================#
 # Compile Source Files                                                         #

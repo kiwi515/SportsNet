@@ -16,7 +16,6 @@ namespace spnet {
 
 LobbySlot::LobbySlot(u32 player) : mPlayer(player), mLayout(NULL), mIcon(NULL) {
     MATO_ASSERT(mPlayer < scMaxPlayers);
-    SetName(L"");
 }
 
 LobbySlot::~LobbySlot() { delete mLayout; }
