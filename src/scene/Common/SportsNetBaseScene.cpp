@@ -87,6 +87,12 @@ void SportsNetBaseScene::UserDraw() { OnUserDraw(); }
  */
 void SportsNetBaseScene::Printf(f32 x, f32 y, f32 scale, bool center,
                                 mato::Color color, const char* fmt, ...) {
+
+    if (RPGrpRenderer::GetDrawPass() != RPGrpRenderer::DRAWPASS_LYT ||
+        RPGrpRenderer::D_804BF615 != 1) {
+        return;
+    }
+
     char msg_buf[0x800];
     va_list list;
     va_start(fmt, list);

@@ -6,6 +6,10 @@
 #include <stdarg.h>
 #include <stddef.h>
 
+#define MESSAGE_ALL_ID(x) ((x) >> 8), ((x)&0xFF)
+#define MESSAGE_GROUP_ID(x) ((x) >> 8)
+#define MESSAGE_MSG_ID(x) ((x)&0xFF)
+
 #define ROUND_UP(x, align) (((x) + (align)-1) & (-(align)))
 #define ROUND_UP_PTR(x, align)                                                 \
     ((void*)((((u32)(x)) + (align)-1) & (~((align)-1))))

@@ -2,7 +2,7 @@
 
 #include "NetplayMgr.hpp"
 #include "SceneCreatorEx.hpp"
-#include "net_message.h"
+#include "net_select_message.h"
 
 #include <RPGraphics/RPGrpRenderer.h>
 #include <RPKernel/RPSysMessage.h>
@@ -19,7 +19,8 @@ NetSelectScene::~NetSelectScene() { delete mNetworkMsg; }
 void NetSelectScene::OnConfigure() {}
 
 void NetSelectScene::OnLoadResource() {
-    void* netBmg = RPSysResourceManager::GetMessageResource("net_message.bmg");
+    void* netBmg =
+        RPSysResourceManager::GetMessageResource("net_select_message.bmg");
     MATO_ASSERT(netBmg != NULL);
     mNetworkMsg = new RPSysMessage(netBmg, NULL);
     MATO_ASSERT(mNetworkMsg != NULL);
@@ -31,7 +32,8 @@ void NetSelectScene::OnCalculate() {
     switch (RPSysSystemWinMgr::getInstance()->getResult()) {
     case RPSysSystemWinMgr::RESULT_NONE:
         RPSysSystemWinMgr::getInstance()->setSystemWindow(
-            RPSysSystemWinMgr::WINDOW_TYPE_MSG, ASK_NET_SELECT, mNetworkMsg, 0);
+            RPSysSystemWinMgr::WINDOW_TYPE_MSG,
+            MESSAGE_GROUP_ID(MSG_ASK_NET_SELECT), mNetworkMsg, 0);
         return;
     case RPSysSystemWinMgr::RESULT_WAIT:
         return;
