@@ -8,21 +8,25 @@ namespace spnet {
 
 class LytTestScene : public SportsNetBaseScene {
 private:
+    //! Client commands
     enum NetCommand {
-        CMD_CLOSE = -1,
         CMD_RECV_FILE_SIZE,
         CMD_RECV_FILE_CHUNK,
         CMD_RECV_LYT_NAME
     };
 
-    enum State {
-        STATE_NO_PEER,
-        STATE_CHECK_CMD,
-        STATE_CMD_CLOSE,
-        STATE_CMD_RECV_FILE_SIZE,
-        STATE_CMD_RECV_FILE_CHUNK,
-        STATE_CMD_RECV_LYT_NAME
+    //! Scene states
+    enum Sequence {
+        SEQ_NO_PEER,
+        SEQ_RECV_SEQ,
+        SEQ_CLOSE,
+        SEQ_RECV_FILE_SIZE,
+        SEQ_RECV_FILE_CHUNK,
+        SEQ_RECV_LYT_NAME,
+        SEQ_MAX
     };
+
+    typedef void (LytTestScene::*SequenceProc)();
 
 public:
     LytTestScene();
@@ -34,9 +38,19 @@ public:
     virtual void OnExit();
     virtual void OnUserDraw();
 
+    void CalcSeqNoPeer();
+    void CalcSeqRecvSeq();
+    void CalcSeqClose();
+    void CalcSeqRecvFileSize();
+    void CalcSeqRecvFileChunk();
+    void CalcSeqRecvLytName();
+
+    void FreeArchive();
+    void FreeLayout();
+
 private:
     //! Scene state
-    State mState;
+    Sequence mSequence;
 
     //! Server socket
     Socket mSocket;
@@ -56,9 +70,14 @@ private:
 
     //! Active layout
     RPSysLayout* mLayout;
+    //! Layout accessor
+    RPSysLytResAccessor* mAccessor;
 
     //! Data chunk size
     static const s32 scChunkSize = 1024;
+
+    //! Sequence logic
+    static const SequenceProc sSequenceCalcProc[SEQ_MAX];
 };
 
 } // namespace spnet

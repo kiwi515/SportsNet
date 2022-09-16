@@ -5,11 +5,12 @@
 #include <RPGraphics/RPGrpRenderer.h>
 #include <RPKernel/RPSysLayout.h>
 #include <RPKernel/RPSysLytResAccessor.h>
+#include <TRK/__mem.h>
 
 namespace spnet {
 
 LytTestScene::LytTestScene()
-    : mState(STATE_NO_PEER),
+    : mSequence(SEQ_NO_PEER),
       mSocket(Socket::SOCK_STREAM),
       mIP(0xFF000001),
       mPort(12345),
@@ -17,19 +18,27 @@ LytTestScene::LytTestScene()
       mArcBuffer(NULL),
       mArcSize(0),
       mArcBytesRead(0),
-      mLayout(NULL) {
+      mLayout(NULL),
+      mAccessor(NULL) {
+    // Socket is non-blocking to avoid game halt
     mSocket.SetBlocking(false);
 }
 
 LytTestScene::~LytTestScene() {
+    // Disconnect from client
     mSocket.Disconnect();
     delete mClient;
     mClient = NULL;
-    delete mLayout;
-    mLayout = NULL;
+    // Free memory
+    FreeArchive();
+    FreeLayout();
 }
 
 void LytTestScene::OnConfigure() {
+    // Create accessor
+    mAccessor = RPSysLytResAccessor::create(NULL);
+    MATO_ASSERT(mAccessor != NULL);
+
     // Start server
     MATO_ASSERT(mSocket.Bind(mPort));
     MATO_ASSERT(mSocket.Listen());
@@ -46,167 +55,11 @@ void LytTestScene::OnLoadResource() {}
 void LytTestScene::OnReset() { RPSndAudioMgr::getInstance()->stopAllSoud(); }
 
 void LytTestScene::OnCalculate() {
-    s32 read;
+    // Run sequence logic
+    MATO_ASSERT(mSequence < SEQ_MAX);
+    (this->*sSequenceCalcProc[mSequence])();
 
-    switch (mState) {
-    // Accept incoming connection
-    case STATE_NO_PEER:
-        MATO_ASSERT(mClient == NULL);
-        mClient = mSocket.Accept();
-        if (mClient != NULL) {
-            mClient->SetBlocking(false);
-            mState = STATE_CHECK_CMD;
-        }
-        break;
-    // See what client is trying to do (check command)
-    case STATE_CHECK_CMD:
-        MATO_ASSERT(mClient != NULL);
-
-        u32 cmd;
-        read = mClient->Recieve(&cmd, sizeof(cmd));
-
-        // Handle errors
-        if (read < 0) {
-            if (read != -Socket::EAGAIN) {
-                MATO_LOG_EX("Error while receiving command: %s",
-                            Socket::GetErrorString(read));
-                mState = STATE_CMD_CLOSE;
-            }
-        } else if (read == 0) {
-            mState = STATE_CMD_CLOSE;
-        } else if (read != sizeof(cmd)) {
-            MATO_LOG_EX("Invalid command packet size: %d", read);
-            mState = STATE_CMD_CLOSE;
-        }
-        // Successful read
-        else {
-            switch (cmd) {
-            // Close client connection
-            case CMD_CLOSE:
-                mState = STATE_CMD_CLOSE;
-                break;
-            case CMD_RECV_FILE_SIZE:
-                mState = STATE_CMD_RECV_FILE_SIZE;
-                break;
-            case CMD_RECV_FILE_CHUNK:
-                mState = STATE_CMD_RECV_FILE_CHUNK;
-                break;
-            case CMD_RECV_LYT_NAME:
-                mState = STATE_CMD_RECV_LYT_NAME;
-            default:
-                MATO_LOG_EX("Invalid command: %d", cmd);
-            }
-        }
-        break;
-    // Disconnect from client
-    case STATE_CMD_CLOSE:
-        mClient->Disconnect();
-        mClient = NULL;
-        mState = STATE_NO_PEER;
-        // Delete current archive
-        delete mLayout;
-        mLayout = NULL;
-        delete[] mArcBuffer;
-        mArcBuffer = NULL;
-        mArcSize = 0;
-        mArcBytesRead = 0;
-        break;
-    // Client is sending the archive size
-    case STATE_CMD_RECV_FILE_SIZE:
-        u32 size;
-        read = mClient->Recieve(&size, sizeof(size));
-        // Handle errors
-        if (read < 0) {
-            if (read != -Socket::EAGAIN) {
-                MATO_LOG_EX("Error while receiving file size: %s",
-                            Socket::GetErrorString(read));
-                mState = STATE_CMD_CLOSE;
-            }
-        } else if (read == 0) {
-            mState = STATE_CMD_CLOSE;
-        } else if (read != sizeof(size)) {
-            MATO_LOG_EX("Invalid file size packet size: %d", read);
-            mState = STATE_CMD_CLOSE;
-        }
-        // Successful read
-        else {
-            // Delete current archive
-            delete mLayout;
-            mLayout = NULL;
-            mArcSize = 0;
-            delete[] mArcBuffer;
-            mArcBuffer = NULL;
-            mArcBytesRead = 0;
-
-            mArcSize = size;
-            MATO_WARN_EX(mArcSize > 1000000,
-                         "Archive size is over 1MB. (%.2f MB)",
-                         mArcSize / 1000000.0f);
-            MATO_LOG_EX("Allocating arc buffer (%d bytes)", mArcSize);
-            // Allocate from sCurrentHeap
-            mArcBuffer = static_cast<u8*>(EGG::Heap::alloc(mArcSize, 32, NULL));
-            MATO_ASSERT(mArcBuffer != NULL);
-        }
-        mState = STATE_CHECK_CMD;
-        break;
-    // Client is sending an chunk of the archive (<= scChunkSize)
-    case STATE_CMD_RECV_FILE_CHUNK:
-        // There must be contents missing
-        MATO_ASSERT(mArcBytesRead < mArcSize);
-
-        // Attempt to receive chunk
-        read = mClient->Recieve(mArcBuffer + mArcBytesRead, scChunkSize);
-
-        // Handle error
-        if (read < 0) {
-            if (read != -Socket::EAGAIN) {
-                MATO_LOG_EX("Error while receiving file chunk: %s",
-                            Socket::GetErrorString(read));
-                mState = STATE_CMD_CLOSE;
-            }
-        } else if (read == 0) {
-            mState = STATE_CMD_CLOSE;
-        }
-        // Successful read
-        else {
-            mArcBytesRead += read;
-        }
-
-        mState = STATE_CHECK_CMD;
-        break;
-    case STATE_CMD_RECV_LYT_NAME:
-        MATO_ASSERT_EX(mArcBytesRead == mArcSize, "Transfer incomplete");
-
-        // Read layout name
-        char lytName[128] = {};
-        read = mClient->Recieve(lytName, sizeof(lytName));
-
-        // Handle error
-        if (read < 0) {
-            if (read != -Socket::EAGAIN) {
-                MATO_LOG_EX("Error while receiving file chunk: %s",
-                            Socket::GetErrorString(read));
-                mState = STATE_CMD_CLOSE;
-            }
-        } else if (read == 0) {
-            mState = STATE_CMD_CLOSE;
-        }
-        // Successful read
-        else {
-            // Delete old layout
-            delete mLayout;
-            mLayout = NULL;
-
-            // Mount archive
-            RPSysLytResAccessor* accessor = RPSysLytResAccessor::create(NULL);
-            accessor->mountArchive(mArcBuffer, NULL);
-            mLayout = RPSysLayout::create(NULL, accessor, lytName);
-            MATO_ASSERT(mLayout != NULL);
-            delete accessor;
-        }
-        break;
-    }
-
+    // Always update layout if it exists
     if (mLayout != NULL) {
         mLayout->calc();
     }
@@ -217,10 +70,11 @@ void LytTestScene::OnExit() {}
 void LytTestScene::OnUserDraw() {
     const u8* oct = reinterpret_cast<const u8*>(&mIP);
 
-    switch (mState) {
+    switch (mSequence) {
     // Show server IP/port
-    case STATE_NO_PEER:
-        MATO_ASSERT(mClient == NULL);
+    case SEQ_NO_PEER:
+        MATO_ASSERT_EX(mClient == NULL, "Client cannot be null: Sequence %d",
+                       mSequence);
         PrintfOutline(0.0f, 80.0f, 2.0f, true, mato::scColorWhite,
                       mato::scColorBlack, "Layout Test");
 
@@ -244,6 +98,7 @@ void LytTestScene::OnUserDraw() {
         break;
     }
 
+    // Always draw layout if it exists
     if (mLayout != NULL) {
         if (RPGrpRenderer::GetDrawPass() == RPGrpRenderer::DRAWPASS_LYT &&
             RPGrpRenderer::D_804BF615 == 1) {
@@ -251,5 +106,244 @@ void LytTestScene::OnUserDraw() {
         }
     }
 }
+
+/**
+ * @brief Wait for client
+ */
+void LytTestScene::CalcSeqNoPeer() {
+    MATO_ASSERT(mClient == NULL);
+
+    // Accept incoming connection
+    mClient = mSocket.Accept();
+    if (mClient != NULL) {
+        mClient->SetBlocking(false);
+        // Check for tasks
+        mSequence = SEQ_RECV_SEQ;
+        MATO_LOG("Peer accepted, waiting for task");
+    }
+}
+
+/**
+ * @brief Receive sequence from client
+ */
+void LytTestScene::CalcSeqRecvSeq() {
+    MATO_ASSERT(mClient != NULL);
+
+    u32 seq;
+    const s32 read = mClient->Recieve(&seq, sizeof(seq));
+
+    // Handle errors
+    if (read < 0) {
+        if (read != -Socket::EAGAIN) {
+            MATO_LOG_EX("Error while receiving command: %s",
+                        Socket::GetErrorString(read));
+            mSequence = SEQ_CLOSE;
+        }
+    }
+    // 0 bytes read (probably disconnected client?)
+    else if (read == 0) {
+        mSequence = SEQ_CLOSE;
+    }
+    // This isn't a valid packet
+    else if (read != sizeof(seq)) {
+        MATO_LOG_EX("Invalid command packet size: %d", read);
+        mSequence = SEQ_CLOSE;
+    }
+    // Successful read, but invalid sequence
+    else if (seq > SEQ_MAX) {
+        MATO_LOG_EX("Invalid seq: %d", seq);
+        mSequence = SEQ_CLOSE;
+    }
+    // Valid sequence
+    else {
+        mSequence = static_cast<Sequence>(seq);
+    }
+}
+
+/**
+ * @brief Close connection
+ */
+void LytTestScene::CalcSeqClose() {
+    MATO_ASSERT(mClient != NULL);
+
+    // Disconnect client
+    delete mClient;
+    mClient = NULL;
+    mSequence = SEQ_NO_PEER;
+
+    // Free memory
+    FreeArchive();
+    FreeLayout();
+}
+
+/**
+ * @brief Receive file size from client
+ */
+void LytTestScene::CalcSeqRecvFileSize() {
+    MATO_ASSERT(mClient != NULL);
+
+    u32 size;
+    const s32 read = mClient->Recieve(&size, sizeof(size));
+
+    // Handle errors
+    if (read < 0) {
+        if (read != -Socket::EAGAIN) {
+            MATO_LOG_EX("Error while receiving file size: %s",
+                        Socket::GetErrorString(read));
+            mSequence = SEQ_CLOSE;
+        }
+    }
+    // 0 bytes read (probably disconnected client?)
+    else if (read == 0) {
+        mSequence = SEQ_CLOSE;
+    }
+    // This isn't a valid packet
+    else if (read != sizeof(size)) {
+        MATO_LOG_EX("Invalid file size packet size: %d", read);
+        mSequence = SEQ_CLOSE;
+    }
+    // Successful read
+    else {
+        // Delete current archive
+        FreeArchive();
+
+        // Set new archive size
+        mArcSize = size;
+        MATO_WARN_EX(mArcSize > 1000000, "Archive size is over 1MB. (%.2f MB)",
+                     mArcSize / 1000000.0f);
+
+        // Allocate archive buffer (from sCurrentHeap)
+        MATO_LOG_EX("Allocating arc buffer (%d bytes)", mArcSize);
+        mArcBuffer = static_cast<u8*>(EGG::Heap::alloc(mArcSize, 32, NULL));
+
+        // Archive is too big
+        if (mArcBuffer == NULL) {
+            MATO_LOG_EX("Failed to allocate arc buffer (%d bytes)", mArcSize);
+            mSequence = SEQ_CLOSE;
+            return;
+        }
+    }
+
+    // Check for tasks
+    mSequence = SEQ_RECV_SEQ;
+}
+
+/**
+ * @brief Receive a chunk of the archive (<= scChunkSize)
+ */
+void LytTestScene::CalcSeqRecvFileChunk() {
+    MATO_ASSERT(mClient != NULL);
+
+    // There must be contents missing
+    MATO_ASSERT(mArcBytesRead < mArcSize);
+
+    // Attempt to receive chunk
+    const s32 read = mClient->Recieve(mArcBuffer + mArcBytesRead, scChunkSize);
+    MATO_ASSERT_EX(read <= scChunkSize, "WHY?????");
+
+    // Handle error
+    if (read < 0) {
+        if (read != -Socket::EAGAIN) {
+            MATO_LOG_EX("Error while receiving file chunk: %s",
+                        Socket::GetErrorString(read));
+            mSequence = SEQ_CLOSE;
+        }
+    }
+    // 0 bytes read (probably disconnected client?)
+    else if (read == 0) {
+        mSequence = SEQ_CLOSE;
+    }
+    // Successful read
+    else {
+        mArcBytesRead += read;
+    }
+
+    mSequence = SEQ_RECV_SEQ;
+}
+
+/**
+ * @brief Load layout specified by client
+ */
+void LytTestScene::CalcSeqRecvLytName() {
+    MATO_ASSERT(mClient != NULL);
+    MATO_ASSERT(mArcBytesRead <= mArcSize);
+
+    // Incomplete transfer
+    if (mArcBytesRead != mArcSize) {
+        MATO_LOG("Transfer incomplete, cannot load layout");
+        mSequence = SEQ_CLOSE;
+        return;
+    }
+
+    // Read layout name
+    char lytName[255];
+    memset(lytName, 0, sizeof(lytName));
+    const s32 read = mClient->Recieve(lytName, sizeof(lytName));
+
+    // Handle errors
+    if (read < 0) {
+        if (read != -Socket::EAGAIN) {
+            MATO_LOG_EX("Error while receiving command: %s",
+                        Socket::GetErrorString(read));
+            mSequence = SEQ_CLOSE;
+        }
+    }
+    // 0 bytes read (probably disconnected client?)
+    else if (read == 0) {
+        mSequence = SEQ_CLOSE;
+    }
+    // Successful read
+    else {
+        // Delete old layout + accessor
+        FreeLayout();
+
+        // Mount archive
+        mAccessor = RPSysLytResAccessor::create(NULL);
+        MATO_ASSERT(mAccessor != NULL);
+        mAccessor->mountArchive(mArcBuffer, NULL);
+
+        // Attempt to load layout
+        mLayout = RPSysLayout::create(NULL, mAccessor, lytName);
+        if (mLayout == NULL) {
+            MATO_LOG_EX("Could not load layout %s", lytName);
+        }
+
+        // Wait for further tasks
+        mSequence = SEQ_RECV_SEQ;
+    }
+}
+
+/**
+ * @brief Free archive data
+ */
+void LytTestScene::FreeArchive() {
+    mArcSize = 0;
+    mArcBytesRead = 0;
+    delete[] mArcBuffer;
+    mArcBuffer = NULL;
+}
+
+/**
+ * @brief Free layout and accessor
+ */
+void LytTestScene::FreeLayout() {
+    delete mLayout;
+    mLayout = NULL;
+    delete mAccessor;
+    mAccessor = NULL;
+}
+
+//! Sequence logic
+const LytTestScene::SequenceProc
+    LytTestScene::sSequenceCalcProc[LytTestScene::SEQ_MAX] = {
+        // clang-format off
+        &LytTestScene::CalcSeqNoPeer,
+        &LytTestScene::CalcSeqRecvSeq,
+        &LytTestScene::CalcSeqClose,
+        &LytTestScene::CalcSeqRecvFileSize,
+        &LytTestScene::CalcSeqRecvFileChunk,
+        &LytTestScene::CalcSeqRecvLytName
+        // clang-format on
+};
 
 } // namespace spnet

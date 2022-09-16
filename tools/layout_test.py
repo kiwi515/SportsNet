@@ -3,9 +3,9 @@
 import socket
 from os import system, path
 
-CMD_RECV_FILE_SIZE = bytes([0, 0, 0, 0])
-CMD_RECV_FILE_CHUNK = bytes([0, 0, 0, 1])
-CMD_RECV_LYT_NAME = bytes([0, 0, 0, 2])
+SEQ_RECV_FILE_SIZE = bytes([0, 0, 0, 3])
+SEQ_RECV_FILE_CHUNK = bytes([0, 0, 0, 4])
+SEQ_RECV_LYT_NAME = bytes([0, 0, 0, 5])
 
 # Also change this in LytTestScene
 FILE_CHUNK_SIZE = 1024
@@ -70,7 +70,7 @@ def handle_command(cmd, args):
             f"wszst CREATE {src} --DEST {dst} --rm-dest")
 
         # Send archive file size
-        SOCK.send(CMD_RECV_FILE_SIZE)
+        SOCK.send(SEQ_RECV_FILE_SIZE)
         SOCK.send(path.getsize(dst).to_bytes(4, byteorder="big"))
 
         # Read file contents
@@ -81,17 +81,17 @@ def handle_command(cmd, args):
         for i in range(num_chunks):
             start = i * FILE_CHUNK_SIZE
             end = (i + 1) * FILE_CHUNK_SIZE
-            SOCK.send(CMD_RECV_FILE_CHUNK)
+            SOCK.send(SEQ_RECV_FILE_CHUNK)
             SOCK.send(arc[start:end])
         # Send extra data (if applicable)
         if len(arc) % FILE_CHUNK_SIZE != 0:
             last = num_chunks * FILE_CHUNK_SIZE
             assert len(arc) - last <= FILE_CHUNK_SIZE, "Last chunk too big?"
-            SOCK.send(CMD_RECV_FILE_CHUNK)
+            SOCK.send(SEQ_RECV_FILE_CHUNK)
             SOCK.send(arc[last:])
     # Load layout
     elif cmd == "load" and len(args) == 1:
-        SOCK.send(CMD_RECV_LYT_NAME)
+        SOCK.send(SEQ_RECV_LYT_NAME)
         SOCK.send(args[0].encode())
     else:
         print("Invalid command/arguments.")
