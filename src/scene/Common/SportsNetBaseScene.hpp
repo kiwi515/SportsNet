@@ -26,6 +26,12 @@ public:
 
     static void Printf(f32 x, f32 y, f32 scale, bool center, mato::Color color,
                        const char* fmt, ...);
+    static void PrintfShadow(f32 x, f32 y, f32 scale, bool center,
+                             mato::Color textColor, mato::Color shadowColor,
+                             const char* fmt, ...);
+    static void PrintfOutline(f32 x, f32 y, f32 scale, bool center,
+                              mato::Color textColor, mato::Color outlineColor,
+                              const char* fmt, ...);
 
 private:
     //! Base scene functionality

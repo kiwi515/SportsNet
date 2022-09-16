@@ -2,7 +2,12 @@
 build/
 modules/
 baserom/
-tools/*
+test/
+tools/*.exe
+tools/*.dll
+tools/*.config
+tools/*.pdb
+tools/*.json
 romfs/
 riivo/spnet/
 distro/

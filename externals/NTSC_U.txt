@@ -141,6 +141,7 @@
     attachArchive__13RPSndAudioMgrFPCcbPQ34nw4r3snd9SoundHeap=0x801b7c28
     loadGroup__13RPSndAudioMgrFiPQ34nw4r3snd9SoundHeapi=0x801b6c80
     changeScene__13RPSndAudioMgrFv=0x801b71a0
+    stopAllSoud__13RPSndAudioMgrFv=0x801b74b0
 #RPUtlRandom
     sSeed__11RPUtlRandom=0x804bf688
 #RPSportsBaseScene

@@ -16,41 +16,6 @@ public:
         SOCK_DGRAM,
     };
 
-private:
-    //! I/O control commands for internal socket operation
-    enum Ioctl {
-        NONE,
-        IOCTL_ACCEPT,
-        IOCTL_BIND,
-        IOCTL_CLOSE,
-        IOCTL_CONNECT,
-        IOCTL_FCNTL,
-        IOCTL_GET_PEER_NAME,
-        IOCTL_GET_SOCKET_NAME,
-        IOCTL_GET_OPTION,
-        IOCTL_SET_OPTION,
-        IOCTL_LISTEN,
-        IOCTL_POLL,
-        IOCTL_RECV_FROM,
-        IOCTL_SEND_TO,
-        IOCTL_SO_SHUTDOWN,
-        IOCTL_CREATE_SOCKET,
-        IOCTL_GET_HOST_ID,
-        IOCTL_GET_HOST_BY_NAME,
-        IOCTL_GET_HOST_BY_ADDR,
-        IOCTL_GET_NAME_INFO,
-        IOCTL_14H,
-        IOCTL_INET_ATON,
-        IOCTL_INET_PTON,
-        IOCTL_INET_NTOP,
-        IOCTL_GET_ADDR_INFO,
-        IOCTL_SOCK_AT_MARK,
-        IOCTL_GET_INTERFACE_OPTION,
-        IOCTL_SET_INTERFACE_OPTION,
-        IOCTL_SET_INTERFACE,
-        IOCTL_SO_STARTUP
-    };
-
     // https://github.com/dolphin-emu/dolphin/blob/master/Source/Core/Core/IOS/Network/Socket.h
     enum Error {
         SUCCESS,
@@ -134,6 +99,41 @@ private:
         EXDEV,
 
         ERROR_MAX
+    };
+
+private:
+    //! I/O control commands for internal socket operation
+    enum Ioctl {
+        NONE,
+        IOCTL_ACCEPT,
+        IOCTL_BIND,
+        IOCTL_CLOSE,
+        IOCTL_CONNECT,
+        IOCTL_FCNTL,
+        IOCTL_GET_PEER_NAME,
+        IOCTL_GET_SOCKET_NAME,
+        IOCTL_GET_OPTION,
+        IOCTL_SET_OPTION,
+        IOCTL_LISTEN,
+        IOCTL_POLL,
+        IOCTL_RECV_FROM,
+        IOCTL_SEND_TO,
+        IOCTL_SO_SHUTDOWN,
+        IOCTL_CREATE_SOCKET,
+        IOCTL_GET_HOST_ID,
+        IOCTL_GET_HOST_BY_NAME,
+        IOCTL_GET_HOST_BY_ADDR,
+        IOCTL_GET_NAME_INFO,
+        IOCTL_14H,
+        IOCTL_INET_ATON,
+        IOCTL_INET_PTON,
+        IOCTL_INET_NTOP,
+        IOCTL_GET_ADDR_INFO,
+        IOCTL_SOCK_AT_MARK,
+        IOCTL_GET_INTERFACE_OPTION,
+        IOCTL_SET_INTERFACE_OPTION,
+        IOCTL_SET_INTERFACE,
+        IOCTL_SO_STARTUP
     };
 
     struct InAddr {
