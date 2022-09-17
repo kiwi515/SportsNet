@@ -152,4 +152,15 @@ u32 strtoul(const char* str, char** endptr, int base) {
     return (u32)strtol(str, endptr, base);
 }
 
+/**
+ * @brief Get string length (at most maxlen)
+ */
+size_t strnlen(const char* s, size_t maxlen) {
+    const u8* p = (const u8*)s;
+    while (*p && maxlen-- > 0) {
+        p++;
+    }
+    return (u32)p - (u32)s;
+}
+
 } // namespace mato

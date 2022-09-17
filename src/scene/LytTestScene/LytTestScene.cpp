@@ -304,9 +304,7 @@ void LytTestScene::CalcSeqRecvLytName() {
 
         // Attempt to load layout
         mLayout = RPSysLayout::create(NULL, mAccessor, lytName);
-        if (mLayout == NULL) {
-            MATO_LOG_EX("Could not load layout %s", lytName);
-        }
+        MATO_WARN_EX(mLayout == NULL, "Could not load layout %s", lytName);
 
         // Wait for further tasks
         mSequence = SEQ_RECV_SEQ;
