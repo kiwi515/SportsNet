@@ -6,15 +6,21 @@
 #include "SceneCreatorEx.hpp"
 
 #include <RPAudio/RPSndAudioMgr.h>
+#include <RPKernel/RPSysMessage.h>
+#include <RPSystem/RPSysResourceManager.h>
 
 namespace spnet {
 
-LobbyScene::LobbyScene() : mWindow(NULL) {}
+LobbyScene::LobbyScene()
+    : mSequence(SEQ_ASK_HOST), mLobbyMessage(NULL), mPlayerListLyt(NULL) {}
 
-LobbyScene::~LobbyScene() {}
+LobbyScene::~LobbyScene() {
+    delete mLobbyMessage;
+    delete mPlayerListLyt;
+}
 
 void LobbyScene::OnConfigure() {
-    mWindow = new LobbyLytPlayerList();
+    mPlayerListLyt = new LobbyLytPlayerList();
 
     // Prepare audio manager for new archive
     RPSndAudioMgr::getInstance()->changeScene();
@@ -26,18 +32,28 @@ void LobbyScene::OnLoadResource() {
                                                             false, NULL));
     MATO_ASSERT(RPSndAudioMgr::getInstance()->loadGroup(0, NULL, 0));
 
+    // Load text
+    void* mesgBmg =
+        RPSysResourceManager::GetMessageResource("lobby_message.bmg");
+    MATO_ASSERT(mesgBmg != NULL);
+    mLobbyMessage = new RPSysMessage(mesgBmg, NULL);
+    MATO_ASSERT(mLobbyMessage != NULL);
+
     // Load layout assets
-    mWindow->LoadResource();
+    mPlayerListLyt->LoadResource();
 }
 
 void LobbyScene::OnReset() {
     // Start BGM
     RPSndAudioMgr::getInstance()->startSound(BGM_Lobby);
 
-    mWindow->Reset();
+    mPlayerListLyt->Reset();
 }
 
-void LobbyScene::OnCalculate() { mWindow->Calculate(); }
+void LobbyScene::OnCalculate() {
+    MATO_ASSERT(mSequence < SEQ_MAX);
+    (this->*sSequenceCalcProc[mSequence])();
+}
 
 void LobbyScene::OnExit() {
     // Reset netplay settings
@@ -47,7 +63,10 @@ void LobbyScene::OnExit() {
     RPSndAudioMgr::getInstance()->changeScene();
 }
 
-void LobbyScene::OnUserDraw() { mWindow->UserDraw(); }
+void LobbyScene::OnUserDraw() {
+    MATO_ASSERT(mSequence < SEQ_MAX);
+    (this->*sSequenceDrawProc[mSequence])();
+}
 
 /**
  * @brief Lobby player connect callback
@@ -58,7 +77,7 @@ void LobbyScene::OnUserDraw() { mWindow->UserDraw(); }
 void LobbyScene::OnPlayerConnect(void* arg, u32 player) {
     MATO_ASSERT(arg != NULL);
     LobbyScene* thisx = static_cast<LobbyScene*>(arg);
-    thisx->mWindow->UpdatePlayer(player);
+    thisx->mPlayerListLyt->UpdatePlayer(player);
 }
 
 /**
@@ -70,7 +89,21 @@ void LobbyScene::OnPlayerConnect(void* arg, u32 player) {
 void LobbyScene::OnPlayerDisconnect(void* arg, u32 player) {
     MATO_ASSERT(arg != NULL);
     LobbyScene* thisx = static_cast<LobbyScene*>(arg);
-    thisx->mWindow->UpdatePlayer(player);
+    thisx->mPlayerListLyt->UpdatePlayer(player);
 }
+
+const LobbyScene::SequenceProc
+    LobbyScene::sSequenceCalcProc[LobbyScene::SEQ_MAX] = {
+        &LobbyScene::CalcSeqAskHost,
+        &LobbyScene::CalcSeqJoinServer,
+        &LobbyScene::CalcSeqWaitLobby,
+};
+
+const LobbyScene::SequenceProc
+    LobbyScene::sSequenceDrawProc[LobbyScene::SEQ_MAX] = {
+        &LobbyScene::DrawSeqAskHost,
+        &LobbyScene::DrawSeqJoinServer,
+        &LobbyScene::DrawSeqWaitLobby,
+};
 
 } // namespace spnet

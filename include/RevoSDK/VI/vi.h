@@ -6,7 +6,7 @@
 extern "C" {
 #endif
 
-typedef void (*VIPostRetraceCallback)(void);
+typedef void (*VIRetraceCallback)(void);
 
 enum VITvFormat {
     VI_NTSC,
@@ -22,7 +22,8 @@ void VISetBlack(UNKWORD);
 void VIConfigure(GXRenderModeObj*);
 void VIWaitForRetrace(void);
 
-void VISetPostRetraceCallback(VIPostRetraceCallback);
+void VISetPreRetraceCallback(VIRetraceCallback);
+void VISetPostRetraceCallback(VIRetraceCallback);
 
 void VIFlush(void);
 

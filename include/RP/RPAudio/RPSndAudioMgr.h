@@ -17,6 +17,8 @@ public:
     bool startSound(u32 id) { return startSound(&mSndHandle, id); }
     bool startSound(const char* name) { return startSound(&mSndHandle, name); }
 
+    void stopAllSoud();
+
     bool attachArchive(const char* archiveName, bool bStaticPath,
                        nw4r::snd::SoundHeap* heap);
     bool startSound(nw4r::snd::SoundHandle* handle, u32 id);

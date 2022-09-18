@@ -87,6 +87,7 @@ public:
         RP_OCH_MUSIC_SELECT_SCENE,
 
         // SportsNet scenes
+        SPNET_LYT_TEST_SCENE,
         SPNET_NET_SELECT_SCENE,
         SPNET_LOBBY_SCENE,
 

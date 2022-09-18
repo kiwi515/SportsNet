@@ -87,6 +87,12 @@ void SportsNetBaseScene::UserDraw() { OnUserDraw(); }
  */
 void SportsNetBaseScene::Printf(f32 x, f32 y, f32 scale, bool center,
                                 mato::Color color, const char* fmt, ...) {
+
+    if (RPGrpRenderer::GetDrawPass() != RPGrpRenderer::DRAWPASS_LYT ||
+        RPGrpRenderer::D_804BF615 != 1) {
+        return;
+    }
+
     char msg_buf[0x800];
     va_list list;
     va_start(fmt, list);
@@ -94,6 +100,75 @@ void SportsNetBaseScene::Printf(f32 x, f32 y, f32 scale, bool center,
     va_end(list);
 
     RPPrint(x, y, scale, msg_buf, color.argb(), center);
+}
+
+/**
+ * @brief Print formatted text to the screen with a shadow
+ *
+ * @param x X position
+ * @param y Y position
+ * @param scale Text scale
+ * @param textColor Text color
+ * @param shadowColor Shadow color
+ * @param fmt Format string
+ * @param ... Format arguments
+ */
+void SportsNetBaseScene::PrintfShadow(f32 x, f32 y, f32 scale, bool center,
+                                      mato::Color textColor,
+                                      mato::Color shadowColor, const char* fmt,
+                                      ...) {
+
+    if (RPGrpRenderer::GetDrawPass() != RPGrpRenderer::DRAWPASS_LYT ||
+        RPGrpRenderer::D_804BF615 != 1) {
+        return;
+    }
+
+    char msg_buf[0x800];
+    va_list list;
+    va_start(fmt, list);
+    vsnprintf(msg_buf, sizeof(msg_buf), fmt, list);
+    va_end(list);
+
+    // Shadow
+    RPPrint(x + 2.0f, y + 2.0f, scale, msg_buf, shadowColor.argb(), center);
+    // Text
+    RPPrint(x, y, scale, msg_buf, textColor.argb(), center);
+}
+
+/**
+ * @brief Print formatted text to the screen with an outline
+ *
+ * @param x X position
+ * @param y Y position
+ * @param scale Text scale
+ * @param textColor Text color
+ * @param shadowColor Shadow color
+ * @param fmt Format string
+ * @param ... Format arguments
+ */
+void SportsNetBaseScene::PrintfOutline(f32 x, f32 y, f32 scale, bool center,
+                                       mato::Color textColor,
+                                       mato::Color outlineColor,
+                                       const char* fmt, ...) {
+
+    if (RPGrpRenderer::GetDrawPass() != RPGrpRenderer::DRAWPASS_LYT ||
+        RPGrpRenderer::D_804BF615 != 1) {
+        return;
+    }
+
+    char msg_buf[0x800];
+    va_list list;
+    va_start(fmt, list);
+    vsnprintf(msg_buf, sizeof(msg_buf), fmt, list);
+    va_end(list);
+
+    // Outline
+    RPPrint(x - 2.0f, y, scale, msg_buf, outlineColor.argb(), center);
+    RPPrint(x + 2.0f, y, scale, msg_buf, outlineColor.argb(), center);
+    RPPrint(x, y - 2.0f, scale, msg_buf, outlineColor.argb(), center);
+    RPPrint(x, y + 2.0f, scale, msg_buf, outlineColor.argb(), center);
+    // Text
+    RPPrint(x, y, scale, msg_buf, textColor.argb(), center);
 }
 
 } // namespace spnet

@@ -2,14 +2,18 @@
 #include "Socket.hpp"
 #include "types.h"
 
+#include <mato/kernel/matoException.hpp>
 #include <mato/kernel/matoMapFile.hpp>
 #include <mato/kernel/matoMemMgr.hpp>
 
 namespace spnet {
 
 void spnet_main() {
-    // Setup heap
+    // Initialize heap
     mato::MemManager::Initialize();
+
+    // Initialize exceptions
+    mato::Exception::Initialize();
     // Open symbol map
     mato::MapFile::GetInstance().LoadFromDVD("modules/SportsNet_NTSC_U.map",
                                              mato::MapFile::LINK_DYNAMIC);

@@ -1,6 +1,7 @@
 #include "SceneCreatorEx.hpp"
 
 #include "LobbyScene.hpp"
+#include "LytTestScene.hpp"
 #include "NetSelectScene.hpp"
 
 #include <RPAudio/RPSndAudioMgr.h>
@@ -88,6 +89,8 @@ RPSysScene* SceneCreatorEx::CreateSportsScene(ESceneIDEx id) {
  */
 RPSysScene* SceneCreatorEx::CreateSportsNetScene(ESceneIDEx id) {
     switch (id) {
+    case SPNET_LYT_TEST_SCENE:
+        return new LytTestScene();
     case SPNET_NET_SELECT_SCENE:
         return new NetSelectScene();
     case SPNET_LOBBY_SCENE:
@@ -298,8 +301,9 @@ const SceneCreatorEx::SceneAttributes
     {RP_PHYSICAL_RESULT_SCENE,  RP_SPORTS_PACK,  1, false, 3, true,  "RPSportsPhysical/",     "体力測定結果"},
     {RP_GOL_SELECT_SCENE,       RP_SPORTS_PACK,  1, false, 0, false, "RPGolScene/",           "ゴルフコースセレクト"},
     // SportsNet scenes
-    {SPNET_NET_SELECT_SCENE,    RP_SPORTS_PACK,  1, false, 2, true,  "NetSelectScene/",       "Network Select Scene"},
-    {SPNET_LOBBY_SCENE,         RP_SPORTS_PACK,  1, false, 2, false, "LobbyScene/",           "Lobby Scene"}
+    {SPNET_LYT_TEST_SCENE,      RP_SPORTS_PACK,  1, false, 2, true,  "RPSportsCommon/",       "Layout Test"},
+    {SPNET_NET_SELECT_SCENE,    RP_SPORTS_PACK,  1, false, 2, true,  "NetSelectScene/",       "Network Select"},
+    {SPNET_LOBBY_SCENE,         RP_SPORTS_PACK,  1, false, 2, false, "LobbyScene/",           "Lobby"}
         // clang-format on
 };
 

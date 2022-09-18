@@ -172,6 +172,7 @@ $(DOL) $(LOADER): $(LOADER_OBJ_FILES)
 	$(QUIET) mkdir -p $(dir $@)
 	$(QUIET) $(KAMEK) $(LOADER_OBJ_FILES) $(LOADER_FLAGS)
 	$(QUIET) cp -u $(DOL) $(ROMFS_DOL)
+	$(QUIET) cp -u $(LOADER:.bin=.map) $(ROMFS_DOL:.bin=.map)
 
 #==============================================================================#
 # Link Module                                                                  #
@@ -181,6 +182,7 @@ $(MODULE): $(MODULE_OBJ_FILES)
 	$(QUIET) mkdir -p $(dir $@)
 	$(QUIET) $(KAMEK) $(MODULE_OBJ_FILES) $(MODULE_FLAGS)
 	$(QUIET) cp -u $(MODULE) $(ROMFS_MODULE)
+	$(QUIET) cp -u $(MODULE:.bin=.map) $(ROMFS_MODULE:.bin=.map)
 
 #==============================================================================#
 # Build Assets                                                                 #
