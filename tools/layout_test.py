@@ -99,21 +99,15 @@ def handle_command(cmd, args):
 
 def main():
     # Connect to server
-    # while not is_sock_connected():
-    #     # Input server IP
-    #     ip = ""
-    #     while not is_valid_addr_ipv4(ip):
-    #         ip = input("Enter server IPv4:")
+    while not is_sock_connected():
+        # Input server IP
+        ip = ""
+        while not is_valid_addr_ipv4(ip):
+            ip = input("Enter server IPv4:")
 
-    #     # Input server port
-    #     port = ""
-    #     while not is_valid_port_ipv4(port):
-    #         port = input("Enter server port:")
-    #     port = int(port)
+    port = 12345
 
-    #     SOCK.connect((ip, port))
-
-    SOCK.connect(("192.168.0.187", 12345))
+    SOCK.connect((ip, port))
 
     if is_sock_connected():
         print("Connected to server.")
